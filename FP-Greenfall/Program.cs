@@ -1,3 +1,5 @@
+using FP_Greenfall.LevelForm.Level;
+
 namespace FP_Greenfall
 {
     internal static class Program
@@ -11,7 +13,7 @@ namespace FP_Greenfall
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+            Application.Run(new CrackedForest());
         }
     }
 }
