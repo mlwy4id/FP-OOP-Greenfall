@@ -21,6 +21,13 @@ namespace FP_Greenfall.Sprites
         private bool facingLeft;
         const int speed = 10;
 
+        private bool jump = false;
+        private bool doubleJump;
+        private bool canJump = true;
+        private int jumpForce = 60;
+        private int gravity = 10;
+        private System.Windows.Forms.Timer jumpCooldown;
+
         private PictureBox playerPictureBox;
         private Image playerImg;
 
@@ -42,6 +49,11 @@ namespace FP_Greenfall.Sprites
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
 
+            // player jump cooldown timer
+            jumpCooldown = new System.Windows.Forms.Timer();
+            jumpCooldown.Interval = 1000;
+            jumpCooldown.Tick += JumpCooldown;
+
             UpdatePlayer();
         }
 
@@ -50,11 +62,25 @@ namespace FP_Greenfall.Sprites
         {
             if (key == Keys.Right) movingRight = true;
             if (key == Keys.Left) movingLeft = true;
+            if (key == Keys.Space)
+            {
+                if (canJump)
+                {
+                    jump = true;
+                    doubleJump = true;
+                    canJump = false;
+                } else if (doubleJump)
+                {
+                    jump = true;
+                    doubleJump = false;
+                }
+            }
         }
         public void HandleKeyUp(Keys key)
         {
             if (key == Keys.Right) movingRight = false;
             if (key == Keys.Left) movingLeft = false;
+            if (key == Keys.Space) jump = false;
         }
         public void StopWalk(Keys key)
         {
@@ -64,7 +90,7 @@ namespace FP_Greenfall.Sprites
         }
 
         // Player Animation
-        public void Animation()
+        public void Animation(Size boundary)
         {
             if (movingRight)
             {
@@ -82,6 +108,42 @@ namespace FP_Greenfall.Sprites
                 UpdatePlayer();
             }
 
+            // if the player is not on the ground, then gravity pull it down
+            if(playerPictureBox.Bottom <= boundary.Height - 10 && !jump)
+            {
+                playerPictureBox.Top += gravity;
+            }
+
+            if (jump)
+            {
+                playerPictureBox.Top -= jumpForce;
+                jumpForce -= gravity;
+
+                if(jumpForce <= 0 && playerPictureBox.Bottom >= boundary.Height - 10)
+                {
+                    jump = false;
+                    jumpForce = 60;
+                    playerPictureBox.Top = boundary.Height - playerPictureBox.Height - 10;
+                    jumpCooldown.Start();
+                }
+
+            } else
+            {
+                // if player stop pressing the space key, then gravity pull it down
+                if (playerPictureBox.Bottom <= boundary.Height - 10)
+                {
+                    playerPictureBox.Top += gravity;
+                }
+                jumpForce = 60;
+                jumpCooldown.Start(); // start jump cooldown
+            }
+        }
+
+        // Cooldown Timer
+        private void JumpCooldown(object sender, EventArgs e)
+        {
+            canJump = true;
+            jumpCooldown.Stop();
         }
 
         private void UpdatePlayer()

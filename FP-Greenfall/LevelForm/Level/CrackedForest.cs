@@ -25,7 +25,7 @@ namespace FP_Greenfall.LevelForm.Level
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.Bisque;
 
-            timer = new System.Windows.Forms.Timer { Interval = 24 };
+            timer = new System.Windows.Forms.Timer { Interval = 30 };
             timer.Tick += (sender, e) => Render();
             timer.Start();
 
@@ -49,7 +49,7 @@ namespace FP_Greenfall.LevelForm.Level
 
         private void Render()
         {
-            player.Animation();
+            player.Animation(this.ClientSize);
         }
     }
 }
