@@ -1,4 +1,5 @@
 ﻿using FP_Greenfall.Sprites;
+using FP_Greenfall.Sprites.Enemy.Minion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace FP_Greenfall.LevelForm.Level
     public class CrackedForest : Form
     {
         private Player player;
+        private Slime slime;
         private System.Windows.Forms.Timer timer;
 
         public CrackedForest()
@@ -37,6 +39,10 @@ namespace FP_Greenfall.LevelForm.Level
             player = new Player(new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2));
             this.Controls.Add(player.GetPlayerPictureBox());
         }
+        private void InitializeEnemy()
+        {
+            slime = new Slime(new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2), this.player);
+        }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -45,6 +51,11 @@ namespace FP_Greenfall.LevelForm.Level
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
             player.StopWalk(e.KeyCode);
+        }
+
+        private void InitializeComponent()
+        {
+
         }
 
         private void Render()
