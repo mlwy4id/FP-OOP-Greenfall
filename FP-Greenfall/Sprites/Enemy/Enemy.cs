@@ -8,12 +8,15 @@ namespace FP_Greenfall.Sprites.Enemy
 {
     public abstract class Enemy : Character
     {
+        protected Size enemySize;
         protected int speed;
         protected int radius;
         protected bool movingRight;
+        protected bool chasingPlayer;
 
         protected Point playerPos;
         protected Point enemyPos;
+        protected Point startPos;
         protected int dx;
 
         protected Player player;
@@ -21,27 +24,55 @@ namespace FP_Greenfall.Sprites.Enemy
         protected Enemy(Point startPosition, Player player)
         {
             this.player = player;
-            MovementLogic();
-            
+            startPos = startPosition;
         }
 
+        // Chasing player logic
         protected virtual void MovementLogic()
         {
             playerPos = player.GetPlayerPictureBox().Location;
-            enemyPos = this.GetEnemyPictureBox().Location;
+            enemyPos = GetEnemyPictureBox().Location;
 
             dx = playerPos.X - enemyPos.X;
 
-            if(Math.Abs(dx) <= radius)
+            if (Math.Abs(dx) <= radius)
             {
-                if(dx < 0)
+                chasingPlayer = true;
+                if (dx < 0)
                 {
                     facingLeft = true;
                     movingRight = false;
-                } else
+                }
+                else
                 {
                     facingLeft = false;
                     movingRight = true;
+                }
+            } else
+            {
+                chasingPlayer = false;
+                currentFrame = 0;
+                UpdateCharacter();
+            }
+        }
+
+        public virtual void Animation(Size boundary)
+        {
+            ApplyGravity(boundary);
+
+            if(chasingPlayer)
+            {
+                if (movingRight)
+                {
+                    characterPictureBox.Left += speed;
+                    currentFrame = (currentFrame + 1) % totalFrame;
+                    UpdateCharacter();
+                }
+                else
+                {
+                    characterPictureBox.Left -= speed;
+                    currentFrame = (currentFrame + 1) % totalFrame;
+                    UpdateCharacter();
                 }
             }
         }

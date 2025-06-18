@@ -20,7 +20,6 @@ namespace FP_Greenfall.Sprites
         private bool doubleJump;
         private bool canJump = true;
         private int jumpForce = 60;
-        private int gravity = 10;
 
         private bool canDashing;
         private bool dash;
@@ -51,7 +50,7 @@ namespace FP_Greenfall.Sprites
             };
 
 
-            UpdatePlayer();
+            UpdateCharacter();
             InitializeCooldown();
         }
 
@@ -88,7 +87,7 @@ namespace FP_Greenfall.Sprites
         {
             HandleKeyUp(key);
             currentFrame = 0;
-            UpdatePlayer();
+            UpdateCharacter();
         }
 
         // Player Animation
@@ -100,7 +99,7 @@ namespace FP_Greenfall.Sprites
                 facingLeft = false;
                 characterPictureBox.Left += speed;
                 currentFrame = (currentFrame + 1) % totalFrame;
-                UpdatePlayer();
+                UpdateCharacter();
             }
 
             // Left movement
@@ -109,7 +108,7 @@ namespace FP_Greenfall.Sprites
                 facingLeft = true;
                 characterPictureBox.Left -= speed;
                 currentFrame = (currentFrame + 1) % totalFrame;
-                UpdatePlayer();
+                UpdateCharacter();
             }
 
             // if the player is not on the ground, then gravity pull it down
@@ -136,10 +135,7 @@ namespace FP_Greenfall.Sprites
             } else
             {
                 // if player stop pressing the space key, then gravity pull it down
-                if (characterPictureBox.Bottom <= boundary.Height - 10)
-                {
-                    characterPictureBox.Top += gravity;
-                }
+                ApplyGravity(boundary);
                 jumpForce = 60;
             }
 

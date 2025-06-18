@@ -15,12 +15,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Player.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resource\Slime.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Slime.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resource\Player.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Player.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource\Slime.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Slime.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

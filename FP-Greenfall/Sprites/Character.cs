@@ -10,6 +10,8 @@ namespace FP_Greenfall.Sprites
     {
         protected bool facingLeft;
 
+        protected const int gravity = 10;
+
         protected int currentFrame;
         protected int currentRow;
         protected int totalFrame;
@@ -17,7 +19,7 @@ namespace FP_Greenfall.Sprites
         protected Image characterImg;
         protected PictureBox characterPictureBox;
 
-        protected void UpdatePlayer()
+        protected void UpdateCharacter()
         {
             int frameWidth = characterImg.Width / totalFrame;
             int frameHeight = characterImg.Height;
@@ -37,6 +39,13 @@ namespace FP_Greenfall.Sprites
             }
 
             characterPictureBox.Image = currentFrameImg;
+        }
+        protected void ApplyGravity(Size boundary)
+        {
+            if (characterPictureBox.Bottom <= boundary.Height - 10)
+            {
+                characterPictureBox.Top += gravity;
+            }
         }
     }
 }

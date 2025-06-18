@@ -1,5 +1,5 @@
 ﻿using FP_Greenfall.Sprites;
-using FP_Greenfall.Sprites.Enemy.Minion;
+using FP_Greenfall.Sprites.Enemy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace FP_Greenfall.LevelForm.Level
         {
             Initialize();
             InitializePlayer();
+            InitializeEnemy();
         }
 
         private void Initialize()
@@ -42,6 +43,7 @@ namespace FP_Greenfall.LevelForm.Level
         private void InitializeEnemy()
         {
             slime = new Slime(new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2), this.player);
+            this.Controls.Add(slime.GetEnemyPictureBox());
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -61,6 +63,7 @@ namespace FP_Greenfall.LevelForm.Level
         private void Render()
         {
             player.Animation(this.ClientSize);
+            slime.Animation(this.ClientSize);
         }
     }
 }
