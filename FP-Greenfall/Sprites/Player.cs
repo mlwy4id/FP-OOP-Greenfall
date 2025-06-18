@@ -14,6 +14,7 @@ namespace FP_Greenfall.Sprites
 
         private bool movingRight;
         private bool movingLeft;
+        private bool jumpKeyHeld;
         const int speed = 10;
 
         private bool jump = false;
@@ -59,8 +60,10 @@ namespace FP_Greenfall.Sprites
         {
             if (key == Keys.Right) movingRight = true;
             if (key == Keys.Left) movingLeft = true;
-            if (key == Keys.Space)
+            if (key == Keys.Space && !jumpKeyHeld)
             {
+                jumpKeyHeld = true;
+
                 if (canJump)
                 {
                     jump = true;
@@ -81,7 +84,11 @@ namespace FP_Greenfall.Sprites
         {
             if (key == Keys.Right) movingRight = false;
             if (key == Keys.Left) movingLeft = false;
-            if (key == Keys.Space) jump = false;
+            if (key == Keys.Space)
+            {
+                jump = false;
+                jumpKeyHeld = false;
+            }
         }
         public void StopWalk(Keys key)
         {
@@ -91,7 +98,7 @@ namespace FP_Greenfall.Sprites
         }
 
         // Player Animation
-        public void Animation(Size boundary)
+        public void Animation(Size boundary, Func<PictureBox, string, bool> IsCollidingWithGround)
         {
             // Right movement
             if (movingRight)
@@ -111,11 +118,6 @@ namespace FP_Greenfall.Sprites
                 UpdateCharacter();
             }
 
-            // if the player is not on the ground, then gravity pull it down
-            if(characterPictureBox.Bottom <= boundary.Height - 10 && !jump)
-            {
-                characterPictureBox.Top += gravity;
-            }
 
             // Jump & double jump
             if (jump)
@@ -123,19 +125,22 @@ namespace FP_Greenfall.Sprites
                 characterPictureBox.Top -= jumpForce;
                 jumpForce -= gravity;
 
-                if(jumpForce <= 0 && characterPictureBox.Bottom >= boundary.Height - 10)
+                if(jumpForce <= 0 && IsCollidingWithGround(characterPictureBox, "Ground"))
                 {
                     jump = false;
                     jumpForce = 60;
-                    characterPictureBox.Top = boundary.Height - characterPictureBox.Height - 10;
-                } else
-                {
-                    jumpCooldown.Start();
+
+                    while (IsCollidingWithGround(characterPictureBox, "Ground"))
+                    {
+                        characterPictureBox.Top -= 1;
+                    }
                 }
+
+                jumpCooldown.Start();
             } else
             {
-                // if player stop pressing the space key, then gravity pull it down
-                ApplyGravity(boundary);
+                // if the player is not on the ground, then gravity pull it down
+                ApplyGravity(IsCollidingWithGround);
                 jumpForce = 60;
             }
 
@@ -166,7 +171,7 @@ namespace FP_Greenfall.Sprites
         private void InitializeCooldown()
         {
             jumpCooldown = new System.Windows.Forms.Timer();
-            jumpCooldown.Interval = 1000;
+            jumpCooldown.Interval = 2000;
             jumpCooldown.Tick += JumpCooldown;
 
             dashing = new System.Windows.Forms.Timer();
@@ -174,7 +179,7 @@ namespace FP_Greenfall.Sprites
             dashing.Tick += Dashing;
 
             dashCooldown = new System.Windows.Forms.Timer();
-            dashCooldown.Interval = 10000;
+            dashCooldown.Interval = 3000;
             dashCooldown.Tick += DashCooldown;
         }
         private void JumpCooldown(object sender, EventArgs e)

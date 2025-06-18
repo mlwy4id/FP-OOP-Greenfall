@@ -10,7 +10,7 @@ namespace FP_Greenfall.Sprites
     {
         protected bool facingLeft;
 
-        protected const int gravity = 10;
+        protected const int gravity = 15;
 
         protected int currentFrame;
         protected int currentRow;
@@ -40,9 +40,10 @@ namespace FP_Greenfall.Sprites
 
             characterPictureBox.Image = currentFrameImg;
         }
-        protected void ApplyGravity(Size boundary)
+
+        public void ApplyGravity(Func<PictureBox, string, bool> collisionCheck) // Func<> is used to pass a function as an argument
         {
-            if (characterPictureBox.Bottom <= boundary.Height - 10)
+            if (!collisionCheck(characterPictureBox, "Ground"))
             {
                 characterPictureBox.Top += gravity;
             }

@@ -11,7 +11,7 @@ namespace FP_Greenfall.LevelForm.Level
     public class CrackedForest : Form
     {
         private Player player;
-        private Slime slime;
+        private List<Enemy> enemies;
         private System.Windows.Forms.Timer timer;
 
         public CrackedForest()
@@ -19,6 +19,7 @@ namespace FP_Greenfall.LevelForm.Level
             Initialize();
             InitializePlayer();
             InitializeEnemy();
+            InitializeEnvironment();
         }
 
         private void Initialize()
@@ -42,8 +43,30 @@ namespace FP_Greenfall.LevelForm.Level
         }
         private void InitializeEnemy()
         {
-            slime = new Slime(new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2), this.player);
-            this.Controls.Add(slime.GetEnemyPictureBox());
+            enemies = new List<Enemy>();
+
+            Slime s1 = new Slime(new Point(400, 400), player);
+            Slime s2 = new Slime(new Point(600, 400), player);
+
+            enemies.Add(s1);
+            enemies.Add(s2);
+
+            foreach(var enemy in enemies)
+            {
+                this.Controls.Add(enemy.GetEnemyPictureBox());
+            }
+        }
+        private void InitializeEnvironment()
+        {
+            var ground = new PictureBox
+            {
+                Size = new Size(800, 50),
+                Location = new Point(0, this.ClientSize.Height - 50),
+                BackColor = Color.SaddleBrown,
+                Tag = "Ground"
+            };
+
+            this.Controls.Add(ground);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -54,16 +77,32 @@ namespace FP_Greenfall.LevelForm.Level
         {
             player.StopWalk(e.KeyCode);
         }
-
-        private void InitializeComponent()
-        {
-
-        }
-
         private void Render()
         {
-            player.Animation(this.ClientSize);
-            slime.Animation(this.ClientSize);
+            player.Animation(this.ClientSize, IsCollidingWith);
+
+            foreach(var enemy in enemies)
+            {
+                enemy.ApplyGravity(IsCollidingWith);
+                enemy.Animation(this.ClientSize);
+            }
+        }
+
+        // Colliding check
+        private bool IsCollidingWith(PictureBox sprite, string tag)
+        {
+            foreach(Control c in this.Controls)
+            {
+                if(c is PictureBox pb && pb.Tag != null && pb.Tag.ToString() == tag)
+                {
+                    if(sprite.Bounds.IntersectsWith(pb.Bounds))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

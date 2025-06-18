@@ -58,8 +58,6 @@ namespace FP_Greenfall.Sprites.Enemy
 
         public virtual void Animation(Size boundary)
         {
-            ApplyGravity(boundary);
-
             if(chasingPlayer)
             {
                 if (movingRight)
