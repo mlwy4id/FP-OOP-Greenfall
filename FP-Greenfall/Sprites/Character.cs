@@ -41,9 +41,31 @@ namespace FP_Greenfall.Sprites
             characterPictureBox.Image = currentFrameImg;
         }
 
-        public void ApplyGravity(Func<PictureBox, string, bool> collisionCheck) // Func<> is used to pass a function as an argument
+        protected void ApplyGravity(List<PictureBox> grounds)
         {
-            if (!collisionCheck(characterPictureBox, "Ground"))
+            bool onGround = false;
+
+            Rectangle feet = new Rectangle(
+                characterPictureBox.Left,
+                characterPictureBox.Bottom + 1,
+                characterPictureBox.Width,
+                2
+            );
+
+            foreach (PictureBox g in grounds)
+            {
+                if(g.Tag?.ToString() == "Ground")
+                {
+                    if (feet.IntersectsWith(g.Bounds))
+                    {
+                        onGround = true;
+                        characterPictureBox.Top = g.Top - characterPictureBox.Height;
+                        break;
+                    }
+                }
+            }
+
+            if (!onGround)
             {
                 characterPictureBox.Top += gravity;
             }

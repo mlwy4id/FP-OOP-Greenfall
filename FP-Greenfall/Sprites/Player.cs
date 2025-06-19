@@ -14,8 +14,17 @@ namespace FP_Greenfall.Sprites
 
         private bool movingRight;
         private bool movingLeft;
+        public bool MovingRight
+        {
+            get { return movingRight; }
+        }
+        public bool MovingLeft
+        {
+            get { return movingLeft; }
+        }
+
         private bool jumpKeyHeld;
-        const int speed = 10;
+        public const int speed = 7;
 
         private bool jump = false;
         private bool doubleJump;
@@ -33,7 +42,7 @@ namespace FP_Greenfall.Sprites
 
         public Player(Point startPosition)
         {
-            using(MemoryStream ms  = new MemoryStream(Resource.Player.Walking))
+            using(MemoryStream ms  = new MemoryStream(Resource.PlayerImg.Walking))
             {
                 characterImg = Image.FromStream(ms);
             }
@@ -47,7 +56,8 @@ namespace FP_Greenfall.Sprites
                 Size = new Size(playerWidth, playerHeigth),
                 Location = startPosition,
                 Image = characterImg,
-                SizeMode = PictureBoxSizeMode.StretchImage
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                BackColor = Color.Transparent
             };
 
 
@@ -98,7 +108,7 @@ namespace FP_Greenfall.Sprites
         }
 
         // Player Animation
-        public void Animation(Size boundary, Func<PictureBox, string, bool> IsCollidingWithGround)
+        public void Animation(Size boundary, List<PictureBox> grounds)
         {
             // Right movement
             if (movingRight)
@@ -125,22 +135,17 @@ namespace FP_Greenfall.Sprites
                 characterPictureBox.Top -= jumpForce;
                 jumpForce -= gravity;
 
-                if(jumpForce <= 0 && IsCollidingWithGround(characterPictureBox, "Ground"))
+                if(jumpForce <= 0)
                 {
                     jump = false;
                     jumpForce = 60;
-
-                    while (IsCollidingWithGround(characterPictureBox, "Ground"))
-                    {
-                        characterPictureBox.Top -= 1;
-                    }
                 }
 
                 jumpCooldown.Start();
             } else
             {
                 // if the player is not on the ground, then gravity pull it down
-                ApplyGravity(IsCollidingWithGround);
+                ApplyGravity(grounds);
                 jumpForce = 60;
             }
 

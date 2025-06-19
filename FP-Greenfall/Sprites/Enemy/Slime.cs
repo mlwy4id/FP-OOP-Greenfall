@@ -32,15 +32,16 @@ namespace FP_Greenfall.Sprites.Enemy
                 Size = enemySize,
                 Location = startPosition,
                 Image = characterImg,
-                SizeMode = PictureBoxSizeMode.StretchImage
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                BackColor = Color.Transparent
             };
 
             UpdateCharacter();
         }
 
-        public override void Animation(Size boundary)
+        public override void Animation(Size boundary, List<PictureBox> ground)
         {
-            base.Animation(boundary);
+            base.Animation(boundary, ground);
             MovementLogic();
         }
     }

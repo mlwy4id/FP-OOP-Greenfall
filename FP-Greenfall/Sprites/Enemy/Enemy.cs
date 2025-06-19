@@ -56,7 +56,7 @@ namespace FP_Greenfall.Sprites.Enemy
             }
         }
 
-        public virtual void Animation(Size boundary)
+        public virtual void Animation(Size boundary, List<PictureBox> ground)
         {
             if(chasingPlayer)
             {
@@ -72,6 +72,11 @@ namespace FP_Greenfall.Sprites.Enemy
                     currentFrame = (currentFrame + 1) % totalFrame;
                     UpdateCharacter();
                 }
+
+                ApplyGravity(ground);
+            } else
+            {
+                ApplyGravity(ground);
             }
         }
 

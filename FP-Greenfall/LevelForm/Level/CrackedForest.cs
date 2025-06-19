@@ -12,6 +12,9 @@ namespace FP_Greenfall.LevelForm.Level
     {
         private Player player;
         private List<Enemy> enemies;
+        private List<PictureBox> pictureBoxes;
+
+        private Camera camera;
         private System.Windows.Forms.Timer timer;
 
         public CrackedForest()
@@ -27,7 +30,7 @@ namespace FP_Greenfall.LevelForm.Level
             this.Text = "The Cracked Forest";
             this.Size = new Size(800, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.Bisque;
+            this.BackColor = Color.Black;
 
             timer = new System.Windows.Forms.Timer { Interval = 30 };
             timer.Tick += (sender, e) => Render();
@@ -35,11 +38,16 @@ namespace FP_Greenfall.LevelForm.Level
 
             this.KeyDown += OnKeyDown;
             this.KeyUp += OnKeyUp;
+
+            pictureBoxes = new List<PictureBox>();
+            camera = new Camera(new Point(this.ClientSize.Width/2, this.ClientSize.Height/2));
         }
         private void InitializePlayer()
         {
             player = new Player(new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2));
+
             this.Controls.Add(player.GetPlayerPictureBox());
+            pictureBoxes.Add(player.GetPlayerPictureBox());
         }
         private void InitializeEnemy()
         {
@@ -54,6 +62,7 @@ namespace FP_Greenfall.LevelForm.Level
             foreach(var enemy in enemies)
             {
                 this.Controls.Add(enemy.GetEnemyPictureBox());
+                pictureBoxes.Add(enemy.GetEnemyPictureBox());
             }
         }
         private void InitializeEnvironment()
@@ -66,7 +75,18 @@ namespace FP_Greenfall.LevelForm.Level
                 Tag = "Ground"
             };
 
+            var platform = new PictureBox
+            {
+                Size = new Size(150, 20),
+                Location = new Point(300, 350),
+                BackColor = Color.DarkOliveGreen,
+                Tag = "Ground"
+            };
+
+            this.Controls.Add(platform);
             this.Controls.Add(ground);
+            pictureBoxes.Add(platform);
+            pictureBoxes.Add(ground);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -79,30 +99,13 @@ namespace FP_Greenfall.LevelForm.Level
         }
         private void Render()
         {
-            player.Animation(this.ClientSize, IsCollidingWith);
+            player.Animation(this.ClientSize, pictureBoxes); 
+            camera.UpdateCamera(this, player);
 
-            foreach(var enemy in enemies)
+            foreach (var enemy in enemies)
             {
-                enemy.ApplyGravity(IsCollidingWith);
-                enemy.Animation(this.ClientSize);
+                enemy.Animation(this.ClientSize, pictureBoxes);
             }
-        }
-
-        // Colliding check
-        private bool IsCollidingWith(PictureBox sprite, string tag)
-        {
-            foreach(Control c in this.Controls)
-            {
-                if(c is PictureBox pb && pb.Tag != null && pb.Tag.ToString() == tag)
-                {
-                    if(sprite.Bounds.IntersectsWith(pb.Bounds))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }
