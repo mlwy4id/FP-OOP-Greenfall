@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FP_Greenfall.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace FP_Greenfall.Sprites
 {
-    public abstract class Character
+    public abstract class Character : IDamageable
     {
+        protected int health;
+        protected int damage;
+
         protected bool facingLeft;
 
         protected const int gravity = 15;
@@ -70,5 +74,8 @@ namespace FP_Greenfall.Sprites
                 characterPictureBox.Top += gravity;
             }
         }
+
+        public virtual bool IsDead(int health) => health <= 0;
+        public virtual int TakeDamage(int damage) => this.health =- damage;
     }
 }
