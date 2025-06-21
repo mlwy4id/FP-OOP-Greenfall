@@ -1,4 +1,4 @@
-using FP_Greenfall.LevelForm.Level;
+using FP_Greenfall.LevelForm;
 
 namespace FP_Greenfall
 {

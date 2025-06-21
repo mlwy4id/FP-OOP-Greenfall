@@ -23,26 +23,25 @@ namespace FP_Greenfall
             int centerX = form.ClientSize.Width / 2;
             int playerX = player.GetPlayerPictureBox().Left;
 
-            cameraOffset.X = centerX - playerX;
+            int targetOffsetX = centerX - playerX;
+
+            int distance = Math.Abs(targetOffsetX - cameraOffset.X);
+            double lerpFactor = Math.Min(1.0, 0.05 + (distance / 300.0));
+
+            cameraOffset.X = (int)(lastOffset + (targetOffsetX - lastOffset) * lerpFactor);
 
             int delta = cameraOffset.X - lastOffset;
-            int speed = 8;
 
             foreach (Control c in form.Controls)
             {
                 if (c != player.GetPlayerPictureBox())
                 {
-                    if(player.MovingLeft)
-                    {
-                        c.Left += delta + speed;
-                    } else if (player.MovingRight)
-                    {
-                        c.Left += delta - speed;
-                    }
+                    c.Left += delta;
                 }
             }
 
             lastOffset = cameraOffset.X;
         }
+
     }
 }

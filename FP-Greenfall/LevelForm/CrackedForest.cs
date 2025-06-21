@@ -5,13 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
-namespace FP_Greenfall.LevelForm.Level
+namespace FP_Greenfall.LevelForm
 {
     public class CrackedForest : Form
     {
         private Player player;
         private List<Enemy> enemies;
+
+        private Image backgroundImage;
         private List<PictureBox> pictureBoxes;
 
         private Camera camera;
@@ -23,30 +26,32 @@ namespace FP_Greenfall.LevelForm.Level
             InitializePlayer();
             InitializeEnemy();
             InitializeEnvironment();
+
+            this.BackgroundImage = Image.FromFile("Resources/listLevelsbg.png");
+            this.BackgroundImageLayout = ImageLayout.Center;
         }
 
         private void Initialize()
         {
-            this.Text = "The Cracked Forest";
-            this.Size = new Size(800, 600);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.Black;
+            Text = "The Cracked Forest";
+            Size = new Size(800, 600);
+            StartPosition = FormStartPosition.CenterScreen;
 
-            timer = new System.Windows.Forms.Timer { Interval = 30 };
+            timer = new System.Windows.Forms.Timer { Interval = 16 };
             timer.Tick += (sender, e) => Render();
             timer.Start();
 
-            this.KeyDown += OnKeyDown;
-            this.KeyUp += OnKeyUp;
+            KeyDown += OnKeyDown;
+            KeyUp += OnKeyUp;
 
             pictureBoxes = new List<PictureBox>();
-            camera = new Camera(new Point(this.ClientSize.Width/2, this.ClientSize.Height/2));
+            camera = new Camera(new Point(ClientSize.Width/2, ClientSize.Height/2));
         }
         private void InitializePlayer()
         {
-            player = new Player(new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2));
+            player = new Player(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
 
-            this.Controls.Add(player.GetPlayerPictureBox());
+            Controls.Add(player.GetPlayerPictureBox());
             pictureBoxes.Add(player.GetPlayerPictureBox());
         }
         private void InitializeEnemy()
@@ -61,7 +66,7 @@ namespace FP_Greenfall.LevelForm.Level
 
             foreach(var enemy in enemies)
             {
-                this.Controls.Add(enemy.GetEnemyPictureBox());
+                Controls.Add(enemy.GetEnemyPictureBox());
                 pictureBoxes.Add(enemy.GetEnemyPictureBox());
             }
         }
@@ -70,7 +75,7 @@ namespace FP_Greenfall.LevelForm.Level
             var ground = new PictureBox
             {
                 Size = new Size(800, 50),
-                Location = new Point(0, this.ClientSize.Height - 50),
+                Location = new Point(0, ClientSize.Height - 50),
                 BackColor = Color.SaddleBrown,
                 Tag = "Ground"
             };
@@ -83,15 +88,15 @@ namespace FP_Greenfall.LevelForm.Level
                 Tag = "Ground"
             };
 
-            this.Controls.Add(platform);
-            this.Controls.Add(ground);
+            Controls.Add(platform);
+            Controls.Add(ground);
             pictureBoxes.Add(platform);
             pictureBoxes.Add(ground);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            player.HandleKeyDown(e.KeyCode, this.ClientSize);
+            player.HandleKeyDown(e.KeyCode, ClientSize);
         }
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
@@ -99,13 +104,14 @@ namespace FP_Greenfall.LevelForm.Level
         }
         private void Render()
         {
-            player.Animation(this.ClientSize, pictureBoxes); 
-            camera.UpdateCamera(this, player);
+            player.Animation(ClientSize, pictureBoxes); 
 
             foreach (var enemy in enemies)
             {
-                enemy.Animation(this.ClientSize, pictureBoxes);
+                enemy.Animation(ClientSize, pictureBoxes);
             }
+
+            camera.UpdateCamera(this, player);
         }
     }
 }

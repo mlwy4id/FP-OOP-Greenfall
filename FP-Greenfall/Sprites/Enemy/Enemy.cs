@@ -77,14 +77,14 @@ namespace FP_Greenfall.Sprites.Enemy
                     currentFrame = (currentFrame + 1) % totalFrame;
                     UpdateCharacter();
                 }
-
-                ApplyGravity(ground);
             }
 
             if (!isAttacking && !attackCooldown.Enabled)
             {
                 AttackPlayer();
             }
+
+            ApplyGravity(ground);
         }
 
         protected void AttackPlayer()

@@ -35,6 +35,7 @@ namespace FP_Greenfall.Sprites
 
         protected System.Windows.Forms.Timer knockBack;
         protected System.Windows.Forms.Timer attackCooldown;
+        protected System.Windows.Forms.Timer deathDelay;
 
         protected void UpdateCharacter()
         {
@@ -66,7 +67,7 @@ namespace FP_Greenfall.Sprites
                 characterPictureBox.Left,
                 characterPictureBox.Bottom + 1,
                 characterPictureBox.Width,
-                2
+                10
             );
 
             foreach (PictureBox g in grounds)
@@ -93,14 +94,13 @@ namespace FP_Greenfall.Sprites
         public void TakeDamage(int damage, int direction)
         {
             this.health -= damage;
-            this.characterPictureBox.BackColor = Color.Red;
             knockedBackStep = 0;
             knockBackDirection = direction;
             knockBack.Start();
 
             if (IsDead())
             {
-                Die();
+                deathDelay.Start();
             }
         }
         
@@ -113,12 +113,20 @@ namespace FP_Greenfall.Sprites
                 if (knockedBackStep < 10)
                 {
                     characterPictureBox.Left += knockedBackForce * knockBackDirection;
+                    characterPictureBox.Top -= 5;
                     knockedBackStep += 1;
                 } else
                 {
                     knockBack.Stop();
-                    characterPictureBox.BackColor = Color.Transparent;
                 }
+            };
+
+            deathDelay = new System.Windows.Forms.Timer();
+            deathDelay.Interval = 100;
+            deathDelay.Tick += (s, e) =>
+            {
+                Die();
+                deathDelay.Stop();
             };
 
             attackCooldown = new System.Windows.Forms.Timer();

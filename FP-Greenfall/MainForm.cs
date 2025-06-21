@@ -42,14 +42,6 @@ namespace FP_Greenfall
                 BackColor = Color.Transparent
             };
 
-            levelButton = new Button
-            {
-                Size = new Size(125, 50),
-                Text = "Level",
-            };
-            levelButton.Click += LevelButtonClicked;
-            panel.Controls.Add(levelButton);
-
             exitButton = new Button
             {
                 Size = new Size(125, 50),
@@ -63,13 +55,6 @@ namespace FP_Greenfall
             this.Controls.Add(panel);
         }
 
-        private void LevelButtonClicked(object sender, EventArgs e)
-        {
-            ListOfLevel level = new ListOfLevel();
-            level.FormClosed += (s, args) => this.Show();
-            this.Hide();
-            level.Show();
-        }
         private void ExitButtonClicked(object sender, EventArgs e)
         {
             this.Close();
