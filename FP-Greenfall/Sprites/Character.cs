@@ -1,6 +1,7 @@
 ﻿using FP_Greenfall.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,18 +15,26 @@ namespace FP_Greenfall.Sprites
 
         protected int attackRange;
         protected bool canAttack;
+        protected bool isAttacking;
         protected Rectangle attackingBox;
 
         protected bool facingLeft;
 
-        protected const int gravity = 15;
+        protected bool isKnockedBack;
+        protected int knockedBackStep;
+        protected int knockedBackForce = 7;
+        protected int knockBackDirection;
 
+        protected const int gravity = 15;
         protected int currentFrame;
         protected int currentRow;
         protected int totalFrame;
 
         protected Image characterImg;
         protected PictureBox characterPictureBox;
+
+        protected System.Windows.Forms.Timer knockBack;
+        protected System.Windows.Forms.Timer attackCooldown;
 
         protected void UpdateCharacter()
         {
@@ -81,7 +90,44 @@ namespace FP_Greenfall.Sprites
         public bool IsDead() => health <= 0;
         protected void Die() => characterPictureBox?.Parent?.Controls.Remove(characterPictureBox);
 
-        protected abstract void Attacking(List<PictureBox> pictureBoxes);
-        public int TakeDamage(int damage) => this.health -= damage;
+        public void TakeDamage(int damage, int direction)
+        {
+            this.health -= damage;
+            this.characterPictureBox.BackColor = Color.Red;
+            knockedBackStep = 0;
+            knockBackDirection = direction;
+            knockBack.Start();
+
+            if (IsDead())
+            {
+                Die();
+            }
+        }
+        
+        protected void InitializeTimer()
+        {
+            knockBack = new System.Windows.Forms.Timer();
+            knockBack.Interval = 15;
+            knockBack.Tick += (s, e) =>
+            {
+                if (knockedBackStep < 10)
+                {
+                    characterPictureBox.Left += knockedBackForce * knockBackDirection;
+                    knockedBackStep += 1;
+                } else
+                {
+                    knockBack.Stop();
+                    characterPictureBox.BackColor = Color.Transparent;
+                }
+            };
+
+            attackCooldown = new System.Windows.Forms.Timer();
+            attackCooldown.Interval = 1000;
+            attackCooldown.Tick += (s, e) =>
+            {
+                isAttacking = false;
+                attackCooldown.Stop();
+            };
+        }
     }
 }

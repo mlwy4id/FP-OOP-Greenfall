@@ -25,7 +25,7 @@ namespace FP_Greenfall.Sprites
         }
 
         private bool jumpKeyHeld;
-        public const int speed = 7;
+        public const int speed = 5;
 
         private bool jump = false;
         private bool doubleJump;
@@ -68,6 +68,7 @@ namespace FP_Greenfall.Sprites
 
             UpdateCharacter();
             InitializeCooldown();
+            InitializeTimer();
         }
 
         // Movement Logic
@@ -94,7 +95,10 @@ namespace FP_Greenfall.Sprites
             {
                 if(!dash) canDashing = true;
             }
-            if (key == Keys.W) canAttack = true;
+            if (key == Keys.W)
+            {
+                if (!isAttacking) canAttack = true;
+            }
         }
         public void HandleKeyUp(Keys key)
         {
@@ -116,6 +120,8 @@ namespace FP_Greenfall.Sprites
         // Player Animation
         public void Animation(Size boundary, List<PictureBox> pictureBoxes)
         {
+            if (IsDead()) return;
+
             // Right movement
             if (movingRight)
             {
@@ -159,20 +165,17 @@ namespace FP_Greenfall.Sprites
             if(!dash && canDashing)
             {
                 step = 0;
-                dashing.Start();
                 dash = true;
                 canDashing = false;
+                dashing.Start();
             }
 
             //Attack
-            if(canAttack)
+            if(!isAttacking && canAttack)
             {
+                isAttacking = true;
+                canAttack = false;
                 Attacking(pictureBoxes);
-            }
-
-            if (IsDead())
-            {
-                Die();
             }
         }
         private void Dashing(object sender, EventArgs e)
@@ -188,25 +191,38 @@ namespace FP_Greenfall.Sprites
                 dashing.Stop();
             }
         }
-        protected override void Attacking(List<PictureBox> pictureBoxes)
+        protected void Attacking(List<PictureBox> pictureBoxes)
         {
-            attackingBox = new Rectangle(
-                characterPictureBox.Right,
-                characterPictureBox.Top,
-                attackRange,
-                playerHeigth
-            );
+            if (facingLeft)
+            {
+                attackingBox = new Rectangle(
+                    characterPictureBox.Left,
+                    characterPictureBox.Top,
+                    -attackRange,
+                    playerHeigth
+                );
+            } else
+            {
+                attackingBox = new Rectangle(
+                    characterPictureBox.Right,
+                    characterPictureBox.Top,
+                    attackRange,
+                    playerHeigth
+                );
+            }
 
             foreach (PictureBox pictureBox in pictureBoxes)
             {
-                if(pictureBox != null && pictureBox.Tag is Enemy.Enemy enemy)
+                if (pictureBox != null && pictureBox.Tag is Enemy.Enemy enemy)
                 {
-                    if(attackingBox.IntersectsWith(pictureBox.Bounds))
+                    if (attackingBox.IntersectsWith(pictureBox.Bounds))
                     {
-                        enemy.TakeDamage(damage);
+                        enemy.TakeDamage(damage, facingLeft ? -1 : 1);
                     }
                 }
             }
+
+            attackCooldown.Start();
         }
 
         // Cooldown Timer

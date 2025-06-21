@@ -25,6 +25,9 @@ namespace FP_Greenfall.Sprites.Enemy
         {
             this.player = player;
             startPos = startPosition;
+            isAttacking = false;
+
+            InitializeTimer();
         }
 
         // Chasing player logic
@@ -58,6 +61,8 @@ namespace FP_Greenfall.Sprites.Enemy
 
         public virtual void Animation(Size boundary, List<PictureBox> ground)
         {
+            if (IsDead()) return;
+
             if(chasingPlayer)
             {
                 if (movingRight)
@@ -74,16 +79,42 @@ namespace FP_Greenfall.Sprites.Enemy
                 }
 
                 ApplyGravity(ground);
-            } else
-            {
-                ApplyGravity(ground);
             }
 
-            if (IsDead())
+            if (!isAttacking && !attackCooldown.Enabled)
             {
-                Die();
+                AttackPlayer();
             }
         }
+
+        protected void AttackPlayer()
+        {
+            if (facingLeft)
+            {
+                attackingBox = new Rectangle(
+                     characterPictureBox.Left,
+                     characterPictureBox.Top,
+                     -attackRange,
+                     characterPictureBox.Height
+                 );
+            } else
+            {
+                attackingBox = new Rectangle(
+                    characterPictureBox.Right,
+                    characterPictureBox.Top,
+                    attackRange,
+                    characterPictureBox.Height
+                );
+            }
+
+            if(attackingBox.IntersectsWith(player.GetPlayerPictureBox().Bounds))
+            {
+                player.TakeDamage(this.damage, facingLeft ? -1 : 1);
+                isAttacking = true;
+            }
+
+            attackCooldown.Start();
+        } 
 
         public PictureBox GetEnemyPictureBox() => this.characterPictureBox;
     }

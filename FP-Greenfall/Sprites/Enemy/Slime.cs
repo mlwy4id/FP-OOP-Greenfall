@@ -11,7 +11,7 @@ namespace FP_Greenfall.Sprites.Enemy
         private static Image slimeSpriteSheet;
         public Slime(Point startPosition, Player player) : base(startPosition, player)
         {
-            health = 1;
+            health = 2;
             damage = 1;
             attackRange = 5;
 
@@ -27,7 +27,7 @@ namespace FP_Greenfall.Sprites.Enemy
             enemySize = new Size(100, 100);
             characterImg = slimeSpriteSheet;
             radius = 300;
-            speed = 5;
+            speed = 3;
 
             chasingPlayer = false;
 
@@ -46,13 +46,8 @@ namespace FP_Greenfall.Sprites.Enemy
 
         public override void Animation(Size boundary, List<PictureBox> ground)
         {
-            base.Animation(boundary, ground);
             MovementLogic();
-        }
-
-        protected override void Attacking(List<PictureBox> pictureBoxes)
-        {
-            throw new NotImplementedException();
+            base.Animation(boundary, ground);
         }
     }
 }
