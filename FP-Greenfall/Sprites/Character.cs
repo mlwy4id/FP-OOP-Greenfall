@@ -12,6 +12,10 @@ namespace FP_Greenfall.Sprites
         protected int health;
         protected int damage;
 
+        protected int attackRange;
+        protected bool canAttack;
+        protected Rectangle attackingBox;
+
         protected bool facingLeft;
 
         protected const int gravity = 15;
@@ -74,8 +78,10 @@ namespace FP_Greenfall.Sprites
                 characterPictureBox.Top += gravity;
             }
         }
+        public bool IsDead() => health <= 0;
+        protected void Die() => characterPictureBox?.Parent?.Controls.Remove(characterPictureBox);
 
-        public virtual bool IsDead(int health) => health <= 0;
-        public virtual int TakeDamage(int damage) => this.health =- damage;
+        protected abstract void Attacking(List<PictureBox> pictureBoxes);
+        public int TakeDamage(int damage) => this.health -= damage;
     }
 }

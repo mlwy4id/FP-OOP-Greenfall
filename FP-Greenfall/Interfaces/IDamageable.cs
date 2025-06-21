@@ -8,7 +8,7 @@ namespace FP_Greenfall.Interfaces
 {
     public interface IDamageable
     {
-        public bool IsDead(int health);
+        public bool IsDead();
         public int TakeDamage(int damage);
     }
 }

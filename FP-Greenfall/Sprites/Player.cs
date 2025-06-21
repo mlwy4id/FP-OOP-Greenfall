@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FP_Greenfall.Sprites.Enemy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -42,6 +43,10 @@ namespace FP_Greenfall.Sprites
 
         public Player(Point startPosition)
         {
+            health = 5;
+            damage = 1;
+            attackRange = 15;
+
             using(MemoryStream ms  = new MemoryStream(Resource.PlayerImg.Walking))
             {
                 characterImg = Image.FromStream(ms);
@@ -88,7 +93,8 @@ namespace FP_Greenfall.Sprites
             if (key == Keys.Tab)
             {
                 if(!dash) canDashing = true;
-            } 
+            }
+            if (key == Keys.W) canAttack = true;
         }
         public void HandleKeyUp(Keys key)
         {
@@ -108,7 +114,7 @@ namespace FP_Greenfall.Sprites
         }
 
         // Player Animation
-        public void Animation(Size boundary, List<PictureBox> grounds)
+        public void Animation(Size boundary, List<PictureBox> pictureBoxes)
         {
             // Right movement
             if (movingRight)
@@ -145,7 +151,7 @@ namespace FP_Greenfall.Sprites
             } else
             {
                 // if the player is not on the ground, then gravity pull it down
-                ApplyGravity(grounds);
+                ApplyGravity(pictureBoxes);
                 jumpForce = 60;
             }
 
@@ -156,6 +162,17 @@ namespace FP_Greenfall.Sprites
                 dashing.Start();
                 dash = true;
                 canDashing = false;
+            }
+
+            //Attack
+            if(canAttack)
+            {
+                Attacking(pictureBoxes);
+            }
+
+            if (IsDead())
+            {
+                Die();
             }
         }
         private void Dashing(object sender, EventArgs e)
@@ -169,6 +186,26 @@ namespace FP_Greenfall.Sprites
             {
                 dashCooldown.Start();
                 dashing.Stop();
+            }
+        }
+        protected override void Attacking(List<PictureBox> pictureBoxes)
+        {
+            attackingBox = new Rectangle(
+                characterPictureBox.Right,
+                characterPictureBox.Top,
+                attackRange,
+                playerHeigth
+            );
+
+            foreach (PictureBox pictureBox in pictureBoxes)
+            {
+                if(pictureBox != null && pictureBox.Tag is Enemy.Enemy enemy)
+                {
+                    if(attackingBox.IntersectsWith(pictureBox.Bounds))
+                    {
+                        enemy.TakeDamage(damage);
+                    }
+                }
             }
         }
 

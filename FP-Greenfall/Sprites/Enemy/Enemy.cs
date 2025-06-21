@@ -78,6 +78,11 @@ namespace FP_Greenfall.Sprites.Enemy
             {
                 ApplyGravity(ground);
             }
+
+            if (IsDead())
+            {
+                Die();
+            }
         }
 
         public PictureBox GetEnemyPictureBox() => this.characterPictureBox;

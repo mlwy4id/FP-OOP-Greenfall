@@ -11,6 +11,10 @@ namespace FP_Greenfall.Sprites.Enemy
         private static Image slimeSpriteSheet;
         public Slime(Point startPosition, Player player) : base(startPosition, player)
         {
+            health = 1;
+            damage = 1;
+            attackRange = 5;
+
             using (MemoryStream ms = new MemoryStream(Resource.Slime.Walk))
             {
                 slimeSpriteSheet = Image.FromStream(ms);
@@ -33,7 +37,8 @@ namespace FP_Greenfall.Sprites.Enemy
                 Location = startPosition,
                 Image = characterImg,
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                BackColor = Color.Transparent
+                BackColor = Color.Transparent,
+                Tag = this
             };
 
             UpdateCharacter();
@@ -43,6 +48,11 @@ namespace FP_Greenfall.Sprites.Enemy
         {
             base.Animation(boundary, ground);
             MovementLogic();
+        }
+
+        protected override void Attacking(List<PictureBox> pictureBoxes)
+        {
+            throw new NotImplementedException();
         }
     }
 }
