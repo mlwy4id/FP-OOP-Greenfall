@@ -1,49 +1,57 @@
-﻿using FP_Greenfall.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FP_Greenfall.Sprites;
+﻿using FP_Greenfall.Sprites;
+using System.Windows.Forms;
 
-namespace FP_Greenfall
+public class Camera
 {
-    public class Camera
+    private int worldOffsetX;
+    private int worldOffsetY;
+
+    public int WorldOffsetX => worldOffsetX;
+    public int WorldOffsetY => worldOffsetY;
+
+    public Camera()
     {
-        private Point cameraOffset;
-        private int lastOffset;
+        worldOffsetX = 0;
+        worldOffsetY = 0;
+    }
 
-        public Camera(Point point)
+    public void UpdateCamera(Form form, Player player)
+    {
+        var playerBox = player.GetPlayerPictureBox();
+        if (playerBox == null) return;
+
+        int playerCenterX = playerBox.Left + (playerBox.Width / 2);
+        int playerCenterY = playerBox.Top + (playerBox.Height / 2);
+
+        int screenCenterX = form.ClientSize.Width / 2;
+        int screenCenterY = form.ClientSize.Height - 200;
+
+        int deltaX = screenCenterX - playerCenterX;
+        int deltaY = screenCenterY - playerCenterY;
+
+        if (Math.Abs(deltaX) > 1 || Math.Abs(deltaY) > 1)
         {
-            cameraOffset = point;
-        }
-
-        public void UpdateCamera(Form form, Player player)
-        {
-            if(player.GetPlayerPictureBox() == null) return;
-
-            int centerX = form.ClientSize.Width / 2;
-            int playerX = player.GetPlayerPictureBox().Left;
-
-            int targetOffsetX = centerX - playerX;
-
-            int distance = Math.Abs(targetOffsetX - cameraOffset.X);
-            double lerpFactor = Math.Min(1.0, 0.05 + (distance / 300.0));
-
-            cameraOffset.X = (int)(lastOffset + (targetOffsetX - lastOffset) * lerpFactor);
-
-            int delta = cameraOffset.X - lastOffset;
-
-            foreach (Control c in form.Controls)
+            foreach (Control control in form.Controls)
             {
-                if (c == player.GetPlayerPictureBox()) continue;
-                if (c.Tag?.ToString() == "UI") continue;
+                if (control == playerBox) continue;
+                if (control.Tag?.ToString() == "UI") continue;
 
-                c.Left += delta;
+                control.Left += deltaX;
+                control.Top += deltaY;
             }
 
-            lastOffset = cameraOffset.X;
-        }
+            if(player.FacingLeft)
+            {
+                playerBox.Left += deltaX - player.Speed;
+            } else
+            {
+                playerBox.Left += deltaX + player.Speed;       
+            }
 
+            playerBox.Top += deltaY;
+
+            worldOffsetX += deltaX;
+            worldOffsetY += deltaY;
+        }
     }
 }

@@ -20,13 +20,17 @@ namespace FP_Greenfall.Sprites
         protected Rectangle attackingBox;
 
         protected bool facingLeft;
+        public bool FacingLeft
+        {
+            get { return facingLeft; }
+        }
 
         protected bool isKnockedBack;
         protected int knockedBackStep;
         protected int knockedBackForce = 7;
         protected int knockBackDirection;
 
-        protected const int gravity = 15;
+        protected const int gravity = 10;
         protected int currentFrame;
         protected int currentRow;
         protected int totalFrame;
@@ -62,32 +66,39 @@ namespace FP_Greenfall.Sprites
         protected void ApplyGravity(List<PictureBox> grounds)
         {
             bool onGround = false;
+            int targetTop = characterPictureBox.Top;
 
             Rectangle feet = new Rectangle(
                 characterPictureBox.Left,
-                characterPictureBox.Bottom + 1,
+                characterPictureBox.Bottom + 3,
                 characterPictureBox.Width,
                 12
             );
 
             foreach (PictureBox g in grounds)
             {
-                if(g.Tag?.ToString() == "Ground")
+                if (g.Tag?.ToString() == "Ground" && feet.IntersectsWith(g.Bounds))
                 {
-                    if (feet.IntersectsWith(g.Bounds))
+                    onGround = true;
+                    int expectedTop = g.Top - characterPictureBox.Height - 1;
+
+                    // Hanya ubah Top jika posisi tidak cocok
+                    if (characterPictureBox.Top != expectedTop)
                     {
-                        onGround = true;
-                        characterPictureBox.Top = g.Top - characterPictureBox.Height;
-                        break;
+                        characterPictureBox.Top = expectedTop;
                     }
+
+                    break;
                 }
             }
 
+            // Kalau tidak di tanah, jatuhkan karakter
             if (!onGround)
             {
                 characterPictureBox.Top += gravity;
             }
         }
+
         public bool IsDead() => health <= 0;
         protected void Die()
         {
@@ -106,6 +117,7 @@ namespace FP_Greenfall.Sprites
             this.health -= damage;
             knockedBackStep = 0;
             knockBackDirection = direction;
+            characterPictureBox.BackColor = Color.Red;
             knockBack.Start();
 
             if (IsDead())
@@ -129,6 +141,7 @@ namespace FP_Greenfall.Sprites
                     knockedBackStep += 1;
                 } else
                 {
+                    characterPictureBox.BackColor = Color.Transparent;
                     knockBack.Stop();
                 }
             };

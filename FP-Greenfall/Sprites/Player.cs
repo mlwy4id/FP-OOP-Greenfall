@@ -27,7 +27,11 @@ namespace FP_Greenfall.Sprites
         }
 
         private bool jumpKeyHeld;
-        public const int speed = 5;
+        const int speed = 10;
+        public int Speed
+        {
+            get { return speed; }
+        }
 
         private bool jump = false;
         private bool doubleJump;
@@ -129,7 +133,6 @@ namespace FP_Greenfall.Sprites
             if (movingRight)
             {
                 facingLeft = false;
-                characterPictureBox.Left += speed;
                 currentFrame = (currentFrame + 1) % totalFrame;
                 UpdateCharacter();
             }
@@ -138,7 +141,6 @@ namespace FP_Greenfall.Sprites
             if (movingLeft)
             {
                 facingLeft = true;
-                characterPictureBox.Left -= speed;
                 currentFrame = (currentFrame + 1) % totalFrame;
                 UpdateCharacter();
             }
@@ -271,6 +273,7 @@ namespace FP_Greenfall.Sprites
 
             knockedBackStep = 0;
             knockBackDirection = direction;
+            characterPictureBox.BackColor = Color.Red;
             knockBack.Start();
 
             if (IsDead())
@@ -323,6 +326,6 @@ namespace FP_Greenfall.Sprites
 
             Application.Restart();
         }
-
+        public bool IsWalking() => movingLeft || movingRight;
     }
 }

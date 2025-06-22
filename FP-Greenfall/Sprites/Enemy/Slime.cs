@@ -24,7 +24,7 @@ namespace FP_Greenfall.Sprites.Enemy
             currentRow = 0;
             totalFrame = 7;
 
-            enemySize = new Size(100, 100);
+            enemySize = new Size(70, 70);
             characterImg = slimeSpriteSheet;
             radius = 300;
             speed = 3;

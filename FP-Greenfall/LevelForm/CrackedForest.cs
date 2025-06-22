@@ -31,9 +31,6 @@ namespace FP_Greenfall.LevelForm
             InitializeEnemy();
             InitializeEnvironment();
             InitializeItems();
-
-            this.BackgroundImage = Image.FromFile("Resources/listLevelsbg.png");
-            this.BackgroundImageLayout = ImageLayout.Center;
         }
 
         private void Initialize()
@@ -41,8 +38,12 @@ namespace FP_Greenfall.LevelForm
             Text = "The Cracked Forest";
             Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterScreen;
+            DoubleBuffered = true;
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
-            timer = new System.Windows.Forms.Timer { Interval = 16 };
+            backgroundImage = Image.FromFile("Resources/listLevelsbg.png");
+
+            timer = new System.Windows.Forms.Timer { Interval = 25};
             timer.Tick += (sender, e) => Render();
             timer.Start();
 
@@ -50,7 +51,7 @@ namespace FP_Greenfall.LevelForm
             KeyUp += OnKeyUp;
 
             pictureBoxes = new List<PictureBox>();
-            camera = new Camera(new Point(ClientSize.Width/2, ClientSize.Height/2));
+            camera = new Camera();
         }
         private void InitializePlayer()
         {
@@ -81,10 +82,8 @@ namespace FP_Greenfall.LevelForm
             enemies = new List<Enemy>();
 
             Slime s1 = new Slime(new Point(400, 400), player);
-            Slime s2 = new Slime(new Point(600, 400), player);
 
             enemies.Add(s1);
-            enemies.Add(s2);
 
             foreach(var enemy in enemies)
             {
@@ -96,7 +95,7 @@ namespace FP_Greenfall.LevelForm
         {
             var ground = new PictureBox
             {
-                Size = new Size(800, 50),
+                Size = new Size(2400, 200),
                 Location = new Point(0, ClientSize.Height - 50),
                 BackColor = Color.SaddleBrown,
                 Tag = "Ground"
@@ -137,9 +136,25 @@ namespace FP_Greenfall.LevelForm
         {
             player.StopWalk(e.KeyCode);
         }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (backgroundImage != null)
+            {
+                Graphics g = e.Graphics;
+
+                // Gambar background tepat di tengah layar (statis)
+                int x = (this.ClientSize.Width - backgroundImage.Width) / 2;
+                int y = (this.ClientSize.Height - backgroundImage.Height) / 2;
+
+                g.DrawImage(backgroundImage, new Point(x, y));
+            }
+        }
+
         private void Render()
         {
-            //Debug.WriteLine(player.GetPlayerPictureBox().Location);
+            Debug.WriteLine(player.GetPlayerPictureBox().Location);
 
             player.Animation(ClientSize, pictureBoxes); 
             player.UpdateHealthBar();
@@ -150,7 +165,9 @@ namespace FP_Greenfall.LevelForm
                 enemy.Animation(ClientSize, pictureBoxes);
             }
 
-            camera.UpdateCamera(this, player);
+            if(player.IsWalking()) camera.UpdateCamera(this, player);
+
+            this.Invalidate();
         }
     }
 }
