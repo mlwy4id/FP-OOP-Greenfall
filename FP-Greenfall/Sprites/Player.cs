@@ -229,33 +229,27 @@ namespace FP_Greenfall.Sprites
         }
         public void CheckItemCollision(List<Hearts> heartItems)
         {
-            if (characterPictureBox == null) return;
+            if (characterPictureBox == null || heartItems.Count == 0) return;
 
-            foreach(Hearts heart in heartItems)
+            for(int i = heartItems.Count - 1; i >= 0; i--)
             {
-                var heartBox = heart.GetHeartsPictureBox();
-                if(heartBox != null)
+                var heartbox = heartItems[i].GetHeartsPictureBox();
+
+                if(heartbox != null && heartbox.Bounds.IntersectsWith(characterPictureBox.Bounds))
                 {
-                    if(characterPictureBox.Bounds.IntersectsWith(heartBox.Bounds))
-                    {
-                        if(AddHealth())
-                        {
-                            heartBox.Dispose();
-                        }
-                    }
+                    AddHealth();
+                    heartbox.Dispose();
+                    heartItems.RemoveAt(i);
                 }
             }
         }
-        private bool AddHealth()
+        private void AddHealth()
         {
             if(health < maxHealth)
             {
                 health += 1;
                 UpdateHealthBar();
-                return true;
             }
-
-            return false;
         }
         public void UpdateHealthBar()
         {
