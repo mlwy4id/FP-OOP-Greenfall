@@ -15,6 +15,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>PlayerImg.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resource\Heart.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Heart.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resource\Slime.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -26,6 +31,10 @@
     <EmbeddedResource Update="Resource\PlayerImg.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PlayerImg.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource\Heart.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Heart.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resource\Slime.resx">
       <Generator>ResXFileCodeGenerator</Generator>

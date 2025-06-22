@@ -1,4 +1,6 @@
-﻿using FP_Greenfall.Sprites.Enemy;
+﻿using FP_Greenfall.Items;
+using FP_Greenfall.Resource;
+using FP_Greenfall.Sprites.Enemy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +46,7 @@ namespace FP_Greenfall.Sprites
         public Player(Point startPosition)
         {
             health = 5;
+            maxHealth = 5;
             damage = 1;
             attackRange = 15;
 
@@ -224,13 +227,40 @@ namespace FP_Greenfall.Sprites
 
             attackCooldown.Start();
         }
+        public void CheckItemCollision(List<Hearts> heartItems)
+        {
+            foreach(Hearts heart in heartItems)
+            {
+                var heartBox = heart.GetHeartsPictureBox();
+                if(heartBox != null)
+                {
+                    if(characterPictureBox.Bounds.IntersectsWith(heartBox.Bounds))
+                    {
+                        if(AddHealth())
+                        {
+                            heartBox.Dispose();
+                        }
+                    }
+                }
+            }
+        }
+        private bool AddHealth()
+        {
+            if(health < maxHealth)
+            {
+                health += 1;
+                UpdateHealthBar();
+                return true;
+            }
+
+            return false;
+        }
         public void UpdateHealthBar()
         {
             Panel healthBar = characterPictureBox?.Parent?.Controls.Find("healthBar", true).FirstOrDefault() as Panel;
 
             if (healthBar != null)
             {
-                int maxHealth = 5;
                 int currentHealth = Math.Max(0, this.GetHealth());
 
                 healthBar.Width = (int)(200 * ((double)currentHealth / maxHealth));

@@ -1,7 +1,9 @@
-﻿using FP_Greenfall.Sprites;
+﻿using FP_Greenfall.Items;
+using FP_Greenfall.Sprites;
 using FP_Greenfall.Sprites.Enemy;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ namespace FP_Greenfall.LevelForm
     {
         private Player player;
         private List<Enemy> enemies;
+        private List<Hearts> heartsItem;
 
         private Image backgroundImage;
         private List<PictureBox> pictureBoxes;
@@ -27,6 +30,7 @@ namespace FP_Greenfall.LevelForm
             InitializeHealthBar();
             InitializeEnemy();
             InitializeEnvironment();
+            InitializeItems();
 
             this.BackgroundImage = Image.FromFile("Resources/listLevelsbg.png");
             this.BackgroundImageLayout = ImageLayout.Center;
@@ -111,6 +115,19 @@ namespace FP_Greenfall.LevelForm
             pictureBoxes.Add(platform);
             pictureBoxes.Add(ground);
         }
+        private void InitializeItems()
+        {
+            heartsItem = new List<Hearts>();
+
+            Hearts h1 = new Hearts(new Point(150, 424));
+
+            heartsItem.Add(h1);
+
+            foreach(Hearts h in heartsItem)
+            {
+                this.Controls.Add(h.GetHeartsPictureBox());
+            }
+        }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -122,8 +139,11 @@ namespace FP_Greenfall.LevelForm
         }
         private void Render()
         {
-            player.UpdateHealthBar();
+            Debug.WriteLine(player.GetPlayerPictureBox().Location);
+
             player.Animation(ClientSize, pictureBoxes); 
+            player.UpdateHealthBar();
+            player.CheckItemCollision(heartsItem);
 
             foreach (var enemy in enemies)
             {

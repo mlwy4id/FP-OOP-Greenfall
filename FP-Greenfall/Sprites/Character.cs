@@ -11,6 +11,7 @@ namespace FP_Greenfall.Sprites
     public abstract class Character : IDamageable
     {
         protected int health;
+        protected int maxHealth;
         protected int damage;
 
         protected int attackRange;
@@ -67,7 +68,7 @@ namespace FP_Greenfall.Sprites
                 characterPictureBox.Left,
                 characterPictureBox.Bottom + 1,
                 characterPictureBox.Width,
-                10
+                12
             );
 
             foreach (PictureBox g in grounds)
