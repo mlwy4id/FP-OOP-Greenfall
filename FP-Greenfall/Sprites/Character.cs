@@ -113,7 +113,7 @@ namespace FP_Greenfall.Sprites
                 if (knockedBackStep < 10)
                 {
                     characterPictureBox.Left += knockedBackForce * knockBackDirection;
-                    characterPictureBox.Top -= 5;
+                    characterPictureBox.Top -= 7;
                     knockedBackStep += 1;
                 } else
                 {

@@ -34,10 +34,10 @@ namespace FP_Greenfall
 
             foreach (Control c in form.Controls)
             {
-                if (c != player.GetPlayerPictureBox())
-                {
-                    c.Left += delta;
-                }
+                if (c == player.GetPlayerPictureBox()) continue;
+                if (c.Tag?.ToString() == "UI") continue;
+
+                c.Left += delta;
             }
 
             lastOffset = cameraOffset.X;

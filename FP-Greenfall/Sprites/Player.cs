@@ -224,6 +224,18 @@ namespace FP_Greenfall.Sprites
 
             attackCooldown.Start();
         }
+        public void UpdateHealthBar()
+        {
+            Panel healthBar = characterPictureBox?.Parent?.Controls.Find("healthBar", true).FirstOrDefault() as Panel;
+
+            if (healthBar != null)
+            {
+                int maxHealth = 5;
+                int currentHealth = Math.Max(0, this.GetHealth());
+
+                healthBar.Width = (int)(200 * ((double)currentHealth / maxHealth));
+            }
+        }
 
         // Cooldown Timer
         private void InitializeCooldown()
@@ -252,5 +264,6 @@ namespace FP_Greenfall.Sprites
         }
 
         public PictureBox GetPlayerPictureBox() => characterPictureBox;
+        public int GetHealth() => health;
     }
 }

@@ -24,6 +24,7 @@ namespace FP_Greenfall.LevelForm
         {
             Initialize();
             InitializePlayer();
+            InitializeHealthBar();
             InitializeEnemy();
             InitializeEnvironment();
 
@@ -53,6 +54,23 @@ namespace FP_Greenfall.LevelForm
 
             Controls.Add(player.GetPlayerPictureBox());
             pictureBoxes.Add(player.GetPlayerPictureBox());
+        }
+        private void InitializeHealthBar()
+        {
+            Panel healthBarBackground = new Panel();
+            healthBarBackground.Size = new Size(200, 20);
+            healthBarBackground.Location = new Point(20, 20);
+            healthBarBackground.BackColor = Color.Black;
+            healthBarBackground.Name = "healthBarBackground";
+            healthBarBackground.Tag = "UI";
+
+            Panel healthBar = new Panel();
+            healthBar.Size = new Size(200, 20);
+            healthBar.BackColor = Color.ForestGreen;
+            healthBar.Name = "healthBar";
+
+            healthBarBackground.Controls.Add(healthBar);
+            this.Controls.Add(healthBarBackground);
         }
         private void InitializeEnemy()
         {
@@ -104,6 +122,7 @@ namespace FP_Greenfall.LevelForm
         }
         private void Render()
         {
+            player.UpdateHealthBar();
             player.Animation(ClientSize, pictureBoxes); 
 
             foreach (var enemy in enemies)
