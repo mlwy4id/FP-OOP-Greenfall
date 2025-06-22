@@ -123,7 +123,7 @@ namespace FP_Greenfall.Sprites
         // Player Animation
         public void Animation(Size boundary, List<PictureBox> pictureBoxes)
         {
-            if (IsDead()) return;
+            if (characterPictureBox == null) return;
 
             // Right movement
             if (movingRight)
@@ -229,6 +229,8 @@ namespace FP_Greenfall.Sprites
         }
         public void CheckItemCollision(List<Hearts> heartItems)
         {
+            if (characterPictureBox == null) return;
+
             foreach(Hearts heart in heartItems)
             {
                 var heartBox = heart.GetHeartsPictureBox();
@@ -266,6 +268,22 @@ namespace FP_Greenfall.Sprites
                 healthBar.Width = (int)(200 * ((double)currentHealth / maxHealth));
             }
         }
+        public override void TakeDamage(int damage, int direction)
+        {
+            if (IsDead() || characterPictureBox == null) return;
+
+            health -= damage;
+            UpdateHealthBar();
+
+            knockedBackStep = 0;
+            knockBackDirection = direction;
+            knockBack.Start();
+
+            if (IsDead())
+            {
+                GameOver();
+            }
+        }
 
         // Cooldown Timer
         private void InitializeCooldown()
@@ -295,5 +313,22 @@ namespace FP_Greenfall.Sprites
 
         public PictureBox GetPlayerPictureBox() => characterPictureBox;
         public int GetHealth() => health;
+        private void GameOver()
+        {
+            dashing?.Stop();
+            dashCooldown?.Stop();
+            jumpCooldown?.Stop();
+            knockBack?.Stop();
+            attackCooldown?.Stop();
+
+            characterPictureBox?.Parent?.Controls.Remove(characterPictureBox);
+            characterPictureBox?.Dispose();
+            characterPictureBox = null;
+
+            MessageBox.Show("Game Over!", "You Died", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            Application.Restart();
+        }
+
     }
 }

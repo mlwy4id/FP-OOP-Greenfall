@@ -139,7 +139,7 @@ namespace FP_Greenfall.LevelForm
         }
         private void Render()
         {
-            Debug.WriteLine(player.GetPlayerPictureBox().Location);
+            //Debug.WriteLine(player.GetPlayerPictureBox().Location);
 
             player.Animation(ClientSize, pictureBoxes); 
             player.UpdateHealthBar();

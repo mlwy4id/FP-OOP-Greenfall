@@ -33,6 +33,8 @@ namespace FP_Greenfall.Sprites.Enemy
         // Chasing player logic
         protected virtual void MovementLogic()
         {
+            if (characterPictureBox == null || player.GetPlayerPictureBox() == null) return;
+
             playerPos = player.GetPlayerPictureBox().Location;
             enemyPos = GetEnemyPictureBox().Location;
 
@@ -61,9 +63,9 @@ namespace FP_Greenfall.Sprites.Enemy
 
         public virtual void Animation(Size boundary, List<PictureBox> ground)
         {
-            if (IsDead()) return;
+            if (characterPictureBox == null) return;
 
-            if(chasingPlayer)
+            if (chasingPlayer)
             {
                 if (movingRight)
                 {
@@ -79,7 +81,7 @@ namespace FP_Greenfall.Sprites.Enemy
                 }
             }
 
-            if (!isAttacking && !attackCooldown.Enabled)
+            if (player.GetPlayerPictureBox() != null & !isAttacking && !attackCooldown.Enabled)
             {
                 AttackPlayer();
             }

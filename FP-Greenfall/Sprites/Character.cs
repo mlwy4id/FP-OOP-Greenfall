@@ -36,7 +36,6 @@ namespace FP_Greenfall.Sprites
 
         protected System.Windows.Forms.Timer knockBack;
         protected System.Windows.Forms.Timer attackCooldown;
-        protected System.Windows.Forms.Timer deathDelay;
 
         protected void UpdateCharacter()
         {
@@ -90,10 +89,20 @@ namespace FP_Greenfall.Sprites
             }
         }
         public bool IsDead() => health <= 0;
-        protected void Die() => characterPictureBox?.Parent?.Controls.Remove(characterPictureBox);
-
-        public void TakeDamage(int damage, int direction)
+        protected void Die()
         {
+            if (characterPictureBox == null) return;
+
+            characterPictureBox?.Parent?.Controls.Remove(characterPictureBox);
+
+            characterPictureBox?.Dispose();
+            characterPictureBox = null;
+        }
+
+        public virtual void TakeDamage(int damage, int direction)
+        {
+            if (IsDead()) return;
+
             this.health -= damage;
             knockedBackStep = 0;
             knockBackDirection = direction;
@@ -101,7 +110,7 @@ namespace FP_Greenfall.Sprites
 
             if (IsDead())
             {
-                deathDelay.Start();
+                Die();
             }
         }
         
@@ -111,6 +120,8 @@ namespace FP_Greenfall.Sprites
             knockBack.Interval = 15;
             knockBack.Tick += (s, e) =>
             {
+                if (characterPictureBox == null) return;
+
                 if (knockedBackStep < 10)
                 {
                     characterPictureBox.Left += knockedBackForce * knockBackDirection;
@@ -120,14 +131,6 @@ namespace FP_Greenfall.Sprites
                 {
                     knockBack.Stop();
                 }
-            };
-
-            deathDelay = new System.Windows.Forms.Timer();
-            deathDelay.Interval = 100;
-            deathDelay.Tick += (s, e) =>
-            {
-                Die();
-                deathDelay.Stop();
             };
 
             attackCooldown = new System.Windows.Forms.Timer();

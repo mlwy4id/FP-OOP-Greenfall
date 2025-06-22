@@ -20,6 +20,8 @@ namespace FP_Greenfall
 
         public void UpdateCamera(Form form, Player player)
         {
+            if(player.GetPlayerPictureBox() == null) return;
+
             int centerX = form.ClientSize.Width / 2;
             int playerX = player.GetPlayerPictureBox().Left;
 
