@@ -27,6 +27,8 @@ namespace FP_Greenfall.Sprites
         }
 
         private bool jumpKeyHeld;
+
+        private bool canMove;
         const int speed = 10;
         public int Speed
         {
@@ -54,10 +56,17 @@ namespace FP_Greenfall.Sprites
             damage = 1;
             attackRange = 15;
 
-            using(MemoryStream ms  = new MemoryStream(Resource.PlayerImg.Walking))
+            using(MemoryStream ms  = new MemoryStream(Resource.Player.Player_Walk))
             {
-                characterImg = Image.FromStream(ms);
+                characterWalkImg = Image.FromStream(ms);
             }
+            using (MemoryStream ms = new MemoryStream(Resource.Player.Player_Attack))
+            {
+                characterAttackImg = Image.FromStream(ms);
+            }
+
+            characterImg = characterWalkImg;
+            canMove = true;
 
             currentFrame = 0;
             currentRow = 0;
@@ -76,14 +85,15 @@ namespace FP_Greenfall.Sprites
             UpdateCharacter();
             InitializeCooldown();
             InitializeTimer();
+            AttackCooldown();
         }
 
         // Movement Logic
         public void HandleKeyDown(Keys key, Size boundary)
         {
-            if (key == Keys.Right) movingRight = true;
-            if (key == Keys.Left) movingLeft = true;
-            if (key == Keys.Space && !jumpKeyHeld)
+            if (key == Keys.Right && canMove) movingRight = true;
+            if (key == Keys.Left && canMove) movingLeft = true;
+            if (key == Keys.Space && !jumpKeyHeld && canMove)
             {
                 jumpKeyHeld = true;
 
@@ -98,7 +108,7 @@ namespace FP_Greenfall.Sprites
                     doubleJump = false;
                 }
             }
-            if (key == Keys.Tab)
+            if (key == Keys.Tab && canMove)
             {
                 if(!dash) canDashing = true;
             }
@@ -180,7 +190,18 @@ namespace FP_Greenfall.Sprites
             {
                 isAttacking = true;
                 canAttack = false;
+                canMove = false;
+                characterImg = characterAttackImg;
+                characterPictureBox.Image = characterImg;
+                UpdateCharacter();
+
                 Attacking(pictureBoxes);
+            }
+
+            if (isAttacking)
+            {
+                currentFrame = (currentFrame + 1) % totalFrame;
+                UpdateCharacter();
             }
 
             if (worldY > 500)
@@ -188,6 +209,8 @@ namespace FP_Greenfall.Sprites
                 this.TakeDamage(5, -1);
             }
         }
+
+       
         private void Dashing(object sender, EventArgs e)
         {
             if (step < 10)
@@ -234,6 +257,7 @@ namespace FP_Greenfall.Sprites
 
             attackCooldown.Start();
         }
+
         public void CheckItemCollision(List<Hearts> heartItems)
         {
             if (characterPictureBox == null || heartItems.Count == 0) return;
@@ -311,6 +335,20 @@ namespace FP_Greenfall.Sprites
         {
             dash = false;
             dashCooldown.Stop();
+        }
+        protected override void AttackCooldown()
+        {
+            attackCooldown = new System.Windows.Forms.Timer();
+            attackCooldown.Interval = 500;
+            attackCooldown.Tick += (s, e) =>
+            {
+                characterImg = characterWalkImg;
+                characterPictureBox.Image = characterImg;
+                UpdateCharacter();
+                isAttacking = false;
+                canMove = true;
+                attackCooldown.Stop();
+            };
         }
 
         public PictureBox GetPlayerPictureBox() => characterPictureBox;

@@ -22,14 +22,14 @@ namespace FP_Greenfall.Resource {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class PlayerImg {
+    internal class Player {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal PlayerImg() {
+        internal Player() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace FP_Greenfall.Resource {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FP_Greenfall.Resource.PlayerImg", typeof(PlayerImg).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FP_Greenfall.Resource.Player", typeof(Player).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,19 @@ namespace FP_Greenfall.Resource {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Walking {
+        internal static byte[] Player_Attack {
             get {
-                object obj = ResourceManager.GetObject("Walking", resourceCulture);
+                object obj = ResourceManager.GetObject("Player_Attack", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Player_Walk {
+            get {
+                object obj = ResourceManager.GetObject("Player_Walk", resourceCulture);
                 return ((byte[])(obj));
             }
         }

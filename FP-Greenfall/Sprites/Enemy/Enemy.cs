@@ -28,6 +28,7 @@ namespace FP_Greenfall.Sprites.Enemy
             isAttacking = false;
 
             InitializeTimer();
+            AttackCooldown();
         }
 
         // Chasing player logic

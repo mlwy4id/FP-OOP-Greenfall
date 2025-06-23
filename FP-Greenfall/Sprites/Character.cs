@@ -36,6 +36,8 @@ namespace FP_Greenfall.Sprites
         protected int totalFrame;
 
         protected Image characterImg;
+        protected Image characterWalkImg;
+        protected Image characterAttackImg;
         protected PictureBox characterPictureBox;
 
         protected System.Windows.Forms.Timer knockBack;
@@ -145,7 +147,9 @@ namespace FP_Greenfall.Sprites
                     knockBack.Stop();
                 }
             };
-
+        }
+        protected virtual void AttackCooldown() 
+        {
             attackCooldown = new System.Windows.Forms.Timer();
             attackCooldown.Interval = 1000;
             attackCooldown.Tick += (s, e) =>
