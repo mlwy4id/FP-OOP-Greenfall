@@ -16,9 +16,13 @@ namespace FP_Greenfall.LevelForm
         private Player player;
         private List<Enemy> enemies;
         private List<Hearts> heartsItem;
+        private List<PictureBox> listOfGround;
+        private List<PictureBox> listOfPictureBox;
 
         private Image backgroundImage;
-        private List<PictureBox> pictureBoxes;
+
+        private int worldX;
+        private int worldY;
 
         private Camera camera;
         private System.Windows.Forms.Timer timer;
@@ -26,10 +30,10 @@ namespace FP_Greenfall.LevelForm
         public CrackedForest()
         {
             Initialize();
+            InitializeGround();
             InitializePlayer();
             InitializeHealthBar();
             InitializeEnemy();
-            InitializeEnvironment();
             InitializeItems();
         }
 
@@ -50,15 +54,49 @@ namespace FP_Greenfall.LevelForm
             KeyDown += OnKeyDown;
             KeyUp += OnKeyUp;
 
-            pictureBoxes = new List<PictureBox>();
+            listOfPictureBox = new List<PictureBox>();
+            enemies = new List<Enemy>();
+            heartsItem = new List<Hearts>();
+            listOfGround = new List<PictureBox>();
+
             camera = new Camera();
+        }
+        private void InitializeGround()
+        {
+            var groundsData = new List<(Point position, Size size, Color color)>
+            {
+                //Grounds
+                (new Point(0, ClientSize.Height - 50), new Size(1600, 200), Color.ForestGreen),
+                (new Point(2400, ClientSize.Height - 50), new Size(1600, 200), Color.ForestGreen),
+                //Platforms
+                ((new Point(699, 300), new Size(300, 20), Color.DarkOliveGreen)),
+                ((new Point(379, 129), new Size(300, 20), Color.DarkOliveGreen)),
+                ((new Point(9, 29), new Size(300, 20), Color.DarkOliveGreen)),
+                ((new Point(429, -250), new Size(200, 20), Color.DarkOliveGreen)),
+                ((new Point(829, -250), new Size(500, 20), Color.DarkOliveGreen))
+            };
+
+            foreach (var g in groundsData)
+            {
+                var ground = new PictureBox
+                {
+                    Size = g.size,
+                    Location = g.position,
+                    BackColor = g.color,
+                    Tag = "Ground"
+                };
+
+                Controls.Add(ground);
+                listOfGround.Add(ground);
+                listOfPictureBox.Add(ground);
+            }
         }
         private void InitializePlayer()
         {
             player = new Player(new Point(ClientSize.Width / 2, ClientSize.Height / 2));
 
             Controls.Add(player.GetPlayerPictureBox());
-            pictureBoxes.Add(player.GetPlayerPictureBox());
+            listOfPictureBox.Add(player.GetPlayerPictureBox());
         }
         private void InitializeHealthBar()
         {
@@ -79,46 +117,20 @@ namespace FP_Greenfall.LevelForm
         }
         private void InitializeEnemy()
         {
-            enemies = new List<Enemy>();
-
-            Slime s1 = new Slime(new Point(400, 400), player);
+            Slime s1 = new Slime(new Point(150, 423), player);
+            Slime s2 = new Slime(new Point(784, 423), player);
 
             enemies.Add(s1);
-
+            enemies.Add(s2);
             foreach(var enemy in enemies)
             {
                 Controls.Add(enemy.GetEnemyPictureBox());
-                pictureBoxes.Add(enemy.GetEnemyPictureBox());
+                listOfPictureBox.Add(enemy.GetEnemyPictureBox());
             }
-        }
-        private void InitializeEnvironment()
-        {
-            var ground = new PictureBox
-            {
-                Size = new Size(2400, 200),
-                Location = new Point(0, ClientSize.Height - 50),
-                BackColor = Color.SaddleBrown,
-                Tag = "Ground"
-            };
-
-            var platform = new PictureBox
-            {
-                Size = new Size(150, 20),
-                Location = new Point(300, 350),
-                BackColor = Color.DarkOliveGreen,
-                Tag = "Ground"
-            };
-
-            Controls.Add(platform);
-            Controls.Add(ground);
-            pictureBoxes.Add(platform);
-            pictureBoxes.Add(ground);
         }
         private void InitializeItems()
         {
-            heartsItem = new List<Hearts>();
-
-            Hearts h1 = new Hearts(new Point(150, 424));
+            Hearts h1 = new Hearts(new Point(1014, 424));
 
             heartsItem.Add(h1);
 
@@ -154,18 +166,24 @@ namespace FP_Greenfall.LevelForm
 
         private void Render()
         {
-            Debug.WriteLine(player.GetPlayerPictureBox().Location);
+            if(player.GetPlayerPictureBox() != null)
+            {
 
-            player.Animation(ClientSize, pictureBoxes); 
+                worldX = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetX;
+                worldY = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetY;
+                Debug.WriteLine($"x: {worldX}, y: {worldY}");
+            }
+
+            player.Animation(ClientSize, listOfPictureBox, worldY); 
             player.UpdateHealthBar();
             player.CheckItemCollision(heartsItem);
 
             foreach (var enemy in enemies)
             {
-                enemy.Animation(ClientSize, pictureBoxes);
+                enemy.Animation(ClientSize, listOfPictureBox);
             }
 
-            if(player.IsWalking()) camera.UpdateCamera(this, player);
+            if(player.IsMoving()) camera.UpdateCamera(this, player);
 
             this.Invalidate();
         }

@@ -125,7 +125,7 @@ namespace FP_Greenfall.Sprites
         }
 
         // Player Animation
-        public void Animation(Size boundary, List<PictureBox> pictureBoxes)
+        public void Animation(Size boundary, List<PictureBox> pictureBoxes, int worldY)
         {
             if (characterPictureBox == null) return;
 
@@ -181,6 +181,11 @@ namespace FP_Greenfall.Sprites
                 isAttacking = true;
                 canAttack = false;
                 Attacking(pictureBoxes);
+            }
+
+            if (worldY > 500)
+            {
+                this.TakeDamage(5, -1);
             }
         }
         private void Dashing(object sender, EventArgs e)
@@ -286,7 +291,7 @@ namespace FP_Greenfall.Sprites
         private void InitializeCooldown()
         {
             jumpCooldown = new System.Windows.Forms.Timer();
-            jumpCooldown.Interval = 2000;
+            jumpCooldown.Interval = 2500;
             jumpCooldown.Tick += JumpCooldown;
 
             dashing = new System.Windows.Forms.Timer();
@@ -326,6 +331,6 @@ namespace FP_Greenfall.Sprites
 
             Application.Restart();
         }
-        public bool IsWalking() => movingLeft || movingRight;
+        public bool IsMoving() => movingLeft || movingRight || jump;
     }
 }
