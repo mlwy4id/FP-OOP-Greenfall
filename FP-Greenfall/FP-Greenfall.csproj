@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Resource\Orc.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Orc.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resource\PlayerImg.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -28,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Resource\Orc.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Orc.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resource\PlayerImg.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PlayerImg.Designer.cs</LastGenOutput>
