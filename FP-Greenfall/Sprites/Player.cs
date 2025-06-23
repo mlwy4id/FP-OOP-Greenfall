@@ -54,7 +54,7 @@ namespace FP_Greenfall.Sprites
             health = 5;
             maxHealth = 5;
             damage = 1;
-            attackRange = playerWidth - 10;
+            attackRange = playerWidth - 5;
 
             using(MemoryStream ms  = new MemoryStream(Resource.Player.Player_Walk))
             {
@@ -340,7 +340,7 @@ namespace FP_Greenfall.Sprites
         {
             base.AttackCooldown();
 
-            attackTimer.Interval = 500;
+            attackTimer.Interval = 120;
             attackTimer.Tick += (s, e) =>
             {
                 if (characterImg == null) return;

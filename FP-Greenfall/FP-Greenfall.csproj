@@ -15,6 +15,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Heart.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resource\Minotaur.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Minotaur.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resource\Orc.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -36,6 +41,10 @@
     <EmbeddedResource Update="Resource\Heart.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Heart.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource\Minotaur.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Minotaur.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resource\Orc.resx">
       <Generator>ResXFileCodeGenerator</Generator>

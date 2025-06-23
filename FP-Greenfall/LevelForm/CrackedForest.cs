@@ -120,10 +120,12 @@ namespace FP_Greenfall.LevelForm
             Slime s1 = new Slime(new Point(150, 423), player);
             Slime s2 = new Slime(new Point(784, 423), player);
             Orc o1 = new Orc(new Point(784, 123), player);
+            Minotaur m1 = new Minotaur(new Point(2800, 423), player);
 
             enemies.Add(s1);
             enemies.Add(s2);
             enemies.Add(o1);
+            enemies.Add(m1);
             foreach(var enemy in enemies)
             {
                 Controls.Add(enemy.GetEnemyPictureBox());
