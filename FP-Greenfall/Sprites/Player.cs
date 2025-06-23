@@ -54,7 +54,7 @@ namespace FP_Greenfall.Sprites
             health = 5;
             maxHealth = 5;
             damage = 1;
-            attackRange = 15;
+            attackRange = playerWidth - 10;
 
             using(MemoryStream ms  = new MemoryStream(Resource.Player.Player_Walk))
             {
@@ -198,7 +198,7 @@ namespace FP_Greenfall.Sprites
                 Attacking(pictureBoxes);
             }
 
-            if (isAttacking)
+            if (!canMove && isAttacking)
             {
                 currentFrame = (currentFrame + 1) % totalFrame;
                 UpdateCharacter();
@@ -255,7 +255,7 @@ namespace FP_Greenfall.Sprites
                 }
             }
 
-            attackCooldown.Start();
+            attackTimer.Start();
         }
 
         public void CheckItemCollision(List<Hearts> heartItems)
@@ -338,15 +338,26 @@ namespace FP_Greenfall.Sprites
         }
         protected override void AttackCooldown()
         {
-            attackCooldown = new System.Windows.Forms.Timer();
-            attackCooldown.Interval = 500;
-            attackCooldown.Tick += (s, e) =>
+            base.AttackCooldown();
+
+            attackTimer.Interval = 500;
+            attackTimer.Tick += (s, e) =>
             {
+                if (characterImg == null) return;
+
                 characterImg = characterWalkImg;
                 characterPictureBox.Image = characterImg;
                 UpdateCharacter();
-                isAttacking = false;
                 canMove = true;
+                attackTimer.Stop();
+
+                attackCooldown.Start();
+            };
+
+            attackCooldown.Interval = 1000;
+            attackCooldown.Tick += (s, e) =>
+            {
+                isAttacking = false;
                 attackCooldown.Stop();
             };
         }

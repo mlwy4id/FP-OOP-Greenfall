@@ -28,7 +28,6 @@ namespace FP_Greenfall.Sprites.Enemy
             isAttacking = false;
 
             InitializeTimer();
-            AttackCooldown();
         }
 
         // Chasing player logic
@@ -82,11 +81,6 @@ namespace FP_Greenfall.Sprites.Enemy
                 }
             }
 
-            if (player.GetPlayerPictureBox() != null & !isAttacking && !attackCooldown.Enabled)
-            {
-                AttackPlayer();
-            }
-
             ApplyGravity(ground);
         }
 
@@ -113,10 +107,7 @@ namespace FP_Greenfall.Sprites.Enemy
             if(attackingBox.IntersectsWith(player.GetPlayerPictureBox().Bounds))
             {
                 player.TakeDamage(this.damage, facingLeft ? -1 : 1);
-                isAttacking = true;
             }
-
-            attackCooldown.Start();
         } 
 
         public PictureBox GetEnemyPictureBox() => this.characterPictureBox;

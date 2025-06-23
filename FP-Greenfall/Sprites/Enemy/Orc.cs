@@ -8,16 +8,18 @@ namespace FP_Greenfall.Sprites.Enemy
 {
     public class Orc : Enemy
     {
-        private static Image orcSpriteSheet;
         public Orc(Point startPosition, Player player) : base(startPosition, player)
         {
             health = 4;
             damage = 1;
-            attackRange = 7;
 
-            using (MemoryStream ms = new MemoryStream(Resource.Orc.Walk))
+            using (MemoryStream ms = new MemoryStream(Resource.Orc.Orc_Walking))
             {
-                orcSpriteSheet = Image.FromStream(ms);
+                characterWalkImg = Image.FromStream(ms);
+            }
+            using (MemoryStream ms = new MemoryStream(Resource.Orc.Orc_Attack))
+            {
+                characterAttackImg = Image.FromStream(ms);
             }
 
             currentFrame = 0;
@@ -25,7 +27,9 @@ namespace FP_Greenfall.Sprites.Enemy
             totalFrame = 6;
 
             enemySize = new Size(120, 120);
-            characterImg = orcSpriteSheet;
+            attackRange = enemySize.Width - 5;
+            characterImg = characterWalkImg;
+
             radius = 350;
             speed = 5;
 
@@ -42,12 +46,59 @@ namespace FP_Greenfall.Sprites.Enemy
             };
 
             UpdateCharacter();
+            AttackCooldown();
         }
 
         public override void Animation(Size boundary, List<PictureBox> ground)
         {
             MovementLogic();
             base.Animation(boundary, ground);
+            if (characterPictureBox == null) return;
+            
+            if (Math.Abs(dx) <= attackRange && player.GetPlayerPictureBox() != null && !isAttacking && !attackCooldown.Enabled)
+            {
+                characterImg = characterAttackImg;
+                characterPictureBox.Image = characterImg;
+                totalFrame = 4;
+                isAttacking = true;
+                chasingPlayer = false;
+                AttackPlayer();
+
+                attackTimer.Start();
+            }
+
+            if (!chasingPlayer && isAttacking)
+            {
+                currentFrame = (currentFrame + 1) % totalFrame;
+                UpdateCharacter();
+            }
+        }
+
+        protected override void AttackCooldown()
+        {
+            base.AttackCooldown();
+
+            attackTimer.Interval = 64;
+            attackTimer.Tick += (s, e) =>
+            {
+                if (characterImg == null) return;
+
+                characterImg = characterWalkImg;
+                characterPictureBox.Image = characterImg;
+                totalFrame = 6;
+                UpdateCharacter();
+                chasingPlayer = true;
+                attackTimer.Stop();
+
+                attackCooldown.Start();
+            };
+
+            attackCooldown.Interval = 2000;
+            attackCooldown.Tick += (s, e) =>
+            {
+                isAttacking = false;
+                attackCooldown.Stop();
+            };
         }
     }
 }

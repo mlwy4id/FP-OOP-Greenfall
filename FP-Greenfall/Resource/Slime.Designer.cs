@@ -63,9 +63,19 @@ namespace FP_Greenfall.Resource {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Walk {
+        internal static byte[] Slime_Attack {
             get {
-                object obj = ResourceManager.GetObject("Walk", resourceCulture);
+                object obj = ResourceManager.GetObject("Slime_Attack", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Slime_Walking {
+            get {
+                object obj = ResourceManager.GetObject("Slime_Walking", resourceCulture);
                 return ((byte[])(obj));
             }
         }

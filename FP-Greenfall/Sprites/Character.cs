@@ -42,9 +42,12 @@ namespace FP_Greenfall.Sprites
 
         protected System.Windows.Forms.Timer knockBack;
         protected System.Windows.Forms.Timer attackCooldown;
+        protected System.Windows.Forms.Timer attackTimer;
 
         protected void UpdateCharacter()
         {
+            if (characterPictureBox == null) return;
+
             int frameWidth = characterImg.Width / totalFrame;
             int frameHeight = characterImg.Height;
 
@@ -150,13 +153,8 @@ namespace FP_Greenfall.Sprites
         }
         protected virtual void AttackCooldown() 
         {
+            attackTimer = new System.Windows.Forms.Timer(); 
             attackCooldown = new System.Windows.Forms.Timer();
-            attackCooldown.Interval = 1000;
-            attackCooldown.Tick += (s, e) =>
-            {
-                isAttacking = false;
-                attackCooldown.Stop();
-            };
         }
     }
 }
