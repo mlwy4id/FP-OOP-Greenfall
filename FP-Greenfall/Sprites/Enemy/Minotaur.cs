@@ -17,7 +17,7 @@ namespace FP_Greenfall.Sprites.Enemy
             {
                 characterWalkImg = Image.FromStream(ms);
             }
-            using (MemoryStream ms = new MemoryStream(Resource.Minotaur.Minotaur_Walking))
+            using (MemoryStream ms = new MemoryStream(Resource.Minotaur.Minotaur_Attack))
             {
                 characterAttackImg = Image.FromStream(ms);
             }
