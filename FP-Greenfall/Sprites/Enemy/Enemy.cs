@@ -24,6 +24,7 @@ namespace FP_Greenfall.Sprites.Enemy
         protected Point enemyPos;
         protected Point startPos;
         protected int dx;
+        protected int dy;
 
         protected Player player;
 
@@ -45,8 +46,9 @@ namespace FP_Greenfall.Sprites.Enemy
             enemyPos = GetEnemyPictureBox().Location;
 
             dx = playerPos.X - enemyPos.X;
+            dy = playerPos.Y - enemyPos.Y; 
 
-            if (Math.Abs(dx) <= radius)
+            if (Math.Abs(dx) <= radius && Math.Abs(dy) <= radius)
             {
                 chasingPlayer = true;
                 if (dx < 0)

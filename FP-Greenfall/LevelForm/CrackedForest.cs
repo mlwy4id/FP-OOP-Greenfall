@@ -1,4 +1,4 @@
-﻿using FP_Greenfall.Items;
+﻿using FP_Greenfall.items;
 using FP_Greenfall.Sprites;
 using FP_Greenfall.Sprites.Enemy;
 using System;
@@ -15,7 +15,7 @@ namespace FP_Greenfall.LevelForm
     {
         private Player player;
         private List<Enemy> enemies;
-        private List<Hearts> heartsItem;
+        private List<Items> items;
         private List<PictureBox> listOfGround;
         private List<PictureBox> listOfPictureBox;
 
@@ -32,9 +32,9 @@ namespace FP_Greenfall.LevelForm
             Initialize();
             InitializeGround();
             InitializePlayer();
-            InitializeHealthBar();
             InitializeEnemy();
             InitializeItems();
+            InitializeHealthBar();
         }
 
         private void Initialize()
@@ -56,7 +56,7 @@ namespace FP_Greenfall.LevelForm
 
             listOfPictureBox = new List<PictureBox>();
             enemies = new List<Enemy>();
-            heartsItem = new List<Hearts>();
+            items = new List<Items>();
             listOfGround = new List<PictureBox>();
 
             camera = new Camera();
@@ -114,17 +114,22 @@ namespace FP_Greenfall.LevelForm
 
             healthBarBackground.Controls.Add(healthBar);
             this.Controls.Add(healthBarBackground);
+            healthBarBackground.BringToFront();
         }
         private void InitializeEnemy()
         {
             Slime s1 = new Slime(new Point(150, 423), player);
-            Slime s2 = new Slime(new Point(784, 423), player);
+            Slime s2 = new Slime(new Point(354, 58), player);
             Orc o1 = new Orc(new Point(784, 123), player);
+            Orc o2 = new Orc(new Point(-16, -82), player);
+            Orc o3 = new Orc(new Point(914, -382), player);
             Minotaur m1 = new Minotaur(new Point(2800, 423), player);
 
             enemies.Add(s1);
             enemies.Add(s2);
             enemies.Add(o1);
+            enemies.Add(o2);
+            enemies.Add(o3);
             enemies.Add(m1);
             foreach(var enemy in enemies)
             {
@@ -134,13 +139,16 @@ namespace FP_Greenfall.LevelForm
         }
         private void InitializeItems()
         {
-            Hearts h1 = new Hearts(new Point(1014, 424));
+            Heart h1 = new Heart(new Point(1014, 424));
+            Paper p1 = new Paper(new Point(1214, 424));
+            Key k1 = new Key(new Point(1194, -382));
 
-            heartsItem.Add(h1);
-
-            foreach(Hearts h in heartsItem)
+            items.Add(h1);
+            items.Add(p1);
+            items.Add(k1);
+            foreach(Items item in items)
             {
-                this.Controls.Add(h.GetHeartsPictureBox());
+                this.Controls.Add(item.GetItemPictureBox());
             }
         }
 
@@ -172,7 +180,6 @@ namespace FP_Greenfall.LevelForm
         {
             if(player.GetPlayerPictureBox() != null)
             {
-
                 worldX = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetX;
                 worldY = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetY;
                 Debug.WriteLine($"x: {worldX}, y: {worldY}");
@@ -180,7 +187,7 @@ namespace FP_Greenfall.LevelForm
 
             player.Animation(ClientSize, listOfPictureBox, worldY); 
             player.UpdateHealthBar();
-            player.CheckItemCollision(heartsItem);
+            player.CheckItemCollision(items);
 
             foreach (var enemy in enemies)
             {

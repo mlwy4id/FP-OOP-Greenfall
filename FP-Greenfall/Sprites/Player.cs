@@ -1,4 +1,4 @@
-﻿using FP_Greenfall.Items;
+﻿using FP_Greenfall.items;
 using FP_Greenfall.Resource;
 using FP_Greenfall.Sprites.Enemy;
 using System;
@@ -17,23 +17,10 @@ namespace FP_Greenfall.Sprites
 
         private bool movingRight;
         private bool movingLeft;
-        public bool MovingRight
-        {
-            get { return movingRight; }
-        }
-        public bool MovingLeft
-        {
-            get { return movingLeft; }
-        }
 
         private bool jumpKeyHeld;
-
         private bool canMove;
         const int speed = 10;
-        public int Speed
-        {
-            get { return speed; }
-        }
 
         private bool jump = false;
         private bool doubleJump;
@@ -45,14 +32,37 @@ namespace FP_Greenfall.Sprites
         private int dashForce = 5;
         private int step;
 
+        private bool hasKey;
+
         private System.Windows.Forms.Timer dashing;
         private System.Windows.Forms.Timer jumpCooldown;
         private System.Windows.Forms.Timer dashCooldown;
 
+        public bool MovingRight
+        {
+            get { return movingRight; }
+        }
+        public bool MovingLeft
+        {
+            get { return movingLeft; }
+        }
+        public int Health
+        {
+            get { return health; }
+        }
+        public int MaxHealth
+        {
+            get { return maxHealth; }
+        }
+        public int Speed
+        {
+            get { return speed; }
+        }
+
         public Player(Point startPosition)
         {
             health = 10;
-            maxHealth = 5;
+            maxHealth = 10;
             damage = 1;
             attackRange = playerWidth - 5;
 
@@ -209,8 +219,8 @@ namespace FP_Greenfall.Sprites
                 this.TakeDamage(5, -1);
             }
         }
-
        
+        //Movement logic
         private void Dashing(object sender, EventArgs e)
         {
             if (step < 10)
@@ -258,25 +268,28 @@ namespace FP_Greenfall.Sprites
             attackTimer.Start();
         }
 
-        public void CheckItemCollision(List<Hearts> heartItems)
+        //Item Collision
+        public void CheckItemCollision(List<Items> items)
         {
-            if (characterPictureBox == null || heartItems.Count == 0) return;
+            if (characterPictureBox == null || items.Count == 0) return;
 
-            for(int i = heartItems.Count - 1; i >= 0; i--)
+            for(int i = items.Count - 1; i >= 0; i--)
             {
-                var heartbox = heartItems[i].GetHeartsPictureBox();
+                var itembox = items[i].GetItemPictureBox();
 
-                if(heartbox != null && heartbox.Bounds.IntersectsWith(characterPictureBox.Bounds))
+                if(itembox != null && itembox.Tag.ToString() == "HealingItem" && itembox.Bounds.IntersectsWith(characterPictureBox.Bounds))
                 {
                     AddHealth();
-                    heartbox.Dispose();
-                    heartItems.RemoveAt(i);
+                    itembox.Dispose();
+                    items.RemoveAt(i);
                 }
             }
         }
+
+        // Healing logic
         private void AddHealth()
         {
-            if(health < maxHealth)
+            if (health < maxHealth)
             {
                 health += 1;
                 UpdateHealthBar();
@@ -293,6 +306,7 @@ namespace FP_Greenfall.Sprites
                 healthBar.Width = (int)(200 * ((double)currentHealth / maxHealth));
             }
         }
+
         public override void TakeDamage(int damage, int direction)
         {
             if (IsDead() || characterPictureBox == null) return;
@@ -343,7 +357,7 @@ namespace FP_Greenfall.Sprites
             attackTimer.Interval = 240;
             attackTimer.Tick += (s, e) =>
             {
-                if (characterImg == null) return;
+                if (characterPictureBox == null) return;
 
                 characterImg = characterWalkImg;
                 characterPictureBox.Image = characterImg;
@@ -364,6 +378,8 @@ namespace FP_Greenfall.Sprites
 
         public PictureBox GetPlayerPictureBox() => characterPictureBox;
         public int GetHealth() => health;
+        public bool IsMoving() => movingLeft || movingRight || jump;
+
         private void GameOver()
         {
             dashing?.Stop();
@@ -380,6 +396,5 @@ namespace FP_Greenfall.Sprites
 
             Application.Restart();
         }
-        public bool IsMoving() => movingLeft || movingRight || jump;
     }
 }
