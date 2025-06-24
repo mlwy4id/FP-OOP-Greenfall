@@ -24,7 +24,14 @@ namespace FP_Greenfall.Sprites.Enemy
 
             currentFrame = 0;
             currentRow = 0;
-            totalFrame = 7;
+
+            WalkFrame = 7;
+            AttackFrame = 4;
+
+            AttackAnimationInterval = 128;
+            AttackCooldownInterval = 2000;
+
+            totalFrame = WalkFrame;
 
             enemySize = new Size(70, 70);
             attackRange = enemySize.Width - 10;
@@ -58,7 +65,7 @@ namespace FP_Greenfall.Sprites.Enemy
             {
                 characterImg = characterAttackImg;
                 characterPictureBox.Image = characterImg;
-                totalFrame = 4;
+                totalFrame = AttackFrame;
                 isAttacking = true;
                 chasingPlayer = false;
                 AttackPlayer();
@@ -71,32 +78,6 @@ namespace FP_Greenfall.Sprites.Enemy
                 currentFrame = (currentFrame + 1) % totalFrame;
                 UpdateCharacter();
             }
-        }
-        protected override void AttackCooldown()
-        {
-            base.AttackCooldown();
-
-            attackTimer.Interval = 64;
-            attackTimer.Tick += (s, e) =>
-            {
-                if (characterImg == null) return;
-
-                characterImg = characterWalkImg;
-                characterPictureBox.Image = characterImg;
-                totalFrame = 7;
-                UpdateCharacter();
-                chasingPlayer = true;
-                attackTimer.Stop();
-
-                attackCooldown.Start();
-            };
-
-            attackCooldown.Interval = 2000;
-            attackCooldown.Tick += (s, e) =>
-            {
-                isAttacking = false;
-                attackCooldown.Stop();
-            };
         }
     }
 }

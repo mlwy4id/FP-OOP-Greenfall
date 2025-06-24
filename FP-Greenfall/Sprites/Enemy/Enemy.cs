@@ -14,6 +14,12 @@ namespace FP_Greenfall.Sprites.Enemy
         protected bool movingRight;
         protected bool chasingPlayer;
 
+        protected int AttackFrame;
+        protected int WalkFrame;
+
+        protected int AttackAnimationInterval;
+        protected int AttackCooldownInterval;
+
         protected Point playerPos;
         protected Point enemyPos;
         protected Point startPos;
@@ -108,7 +114,33 @@ namespace FP_Greenfall.Sprites.Enemy
             {
                 player.TakeDamage(this.damage, facingLeft ? -1 : 1);
             }
-        } 
+        }
+        protected override void AttackCooldown()
+        {
+            base.AttackCooldown();
+
+            attackTimer.Interval = AttackAnimationInterval;
+            attackTimer.Tick += (s, e) =>
+            {
+                if (characterImg == null) return;
+
+                characterImg = characterWalkImg;
+                characterPictureBox.Image = characterImg;
+                totalFrame = WalkFrame;
+                UpdateCharacter();
+                chasingPlayer = true;
+                attackTimer.Stop();
+
+                attackCooldown.Start();
+            };
+
+            attackCooldown.Interval = AttackCooldownInterval;
+            attackCooldown.Tick += (s, e) =>
+            {
+                isAttacking = false;
+                attackCooldown.Stop();
+            };
+        }
 
         public PictureBox GetEnemyPictureBox() => this.characterPictureBox;
     }

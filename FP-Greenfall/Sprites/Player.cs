@@ -51,7 +51,7 @@ namespace FP_Greenfall.Sprites
 
         public Player(Point startPosition)
         {
-            health = 5;
+            health = 10;
             maxHealth = 5;
             damage = 1;
             attackRange = playerWidth - 5;
@@ -340,7 +340,7 @@ namespace FP_Greenfall.Sprites
         {
             base.AttackCooldown();
 
-            attackTimer.Interval = 120;
+            attackTimer.Interval = 240;
             attackTimer.Tick += (s, e) =>
             {
                 if (characterImg == null) return;
