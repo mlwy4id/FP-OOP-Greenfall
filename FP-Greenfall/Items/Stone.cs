@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 namespace FP_Greenfall.items
 {
-    public class Paper : Items
+    public class Stone : Items
     {
-        public Paper(Point position)
+        public Stone(Point position)
         {
             itemsWidth = 40;
             itemsHeight = 40;
 
-            using (MemoryStream ms = new MemoryStream(Resource.Paper.Papers))
+            using (MemoryStream ms = new MemoryStream(Resource.Stone.Stones))
             {
                 itemsImg = Image.FromStream(ms);
-            }
-            ;
+            };
 
             itemsPictureBox = new PictureBox
             {
@@ -26,7 +25,7 @@ namespace FP_Greenfall.items
                 Image = itemsImg,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 BackColor = Color.Transparent,
-                Tag = "PaperItem"
+                Tag = "Stone"
             };
         }
     }

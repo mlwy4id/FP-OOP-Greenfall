@@ -30,11 +30,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Orc.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resource\Paper.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Paper.resx</DependentUpon>
-    </Compile>
     <Compile Update="Resource\Player.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -44,6 +39,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Slime.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resource\Stone.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Stone.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -64,10 +64,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Orc.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resource\Paper.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Paper.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resource\Player.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Player.Designer.cs</LastGenOutput>
@@ -75,6 +71,10 @@
     <EmbeddedResource Update="Resource\Slime.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SLime.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource\Stone.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Stone.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

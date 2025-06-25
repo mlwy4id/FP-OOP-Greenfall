@@ -67,7 +67,7 @@ namespace FP_Greenfall.LevelForm
             {
                 //Grounds
                 (new Point(0, ClientSize.Height - 50), new Size(1600, 200), Color.ForestGreen),
-                (new Point(2400, ClientSize.Height - 50), new Size(1600, 200), Color.ForestGreen),
+                (new Point(3000, ClientSize.Height - 50), new Size(1600, 200), Color.ForestGreen),
                 //Platforms
                 ((new Point(699, 300), new Size(300, 20), Color.DarkOliveGreen)),
                 ((new Point(379, 129), new Size(300, 20), Color.DarkOliveGreen)),
@@ -123,7 +123,7 @@ namespace FP_Greenfall.LevelForm
             Orc o1 = new Orc(new Point(784, 123), player);
             Orc o2 = new Orc(new Point(-16, -82), player);
             Orc o3 = new Orc(new Point(914, -382), player);
-            Minotaur m1 = new Minotaur(new Point(2800, 423), player);
+            Minotaur m1 = new Minotaur(new Point(4000, 423), player);
 
             enemies.Add(s1);
             enemies.Add(s2);
@@ -140,16 +140,40 @@ namespace FP_Greenfall.LevelForm
         private void InitializeItems()
         {
             Heart h1 = new Heart(new Point(1014, 424));
-            Paper p1 = new Paper(new Point(1214, 424));
+            Heart h2 = new Heart(new Point(444, -381));
             Key k1 = new Key(new Point(1194, -382));
+            Stone s1 = new Stone(new Point(1300, 464));
 
             items.Add(h1);
-            items.Add(p1);
+            items.Add(h2);
             items.Add(k1);
+            items.Add(s1);
             foreach(Items item in items)
             {
                 this.Controls.Add(item.GetItemPictureBox());
             }
+        }
+        public void InitializeBridge()
+        {
+            var bridge = new PictureBox
+            {
+                Size = new Size(1200, 20),
+                Location = new Point(800, 400),
+                BackColor = Color.BurlyWood,
+                Tag = "Ground"
+            };
+
+            Controls.Add(bridge);
+            listOfGround.Add(bridge);
+            listOfPictureBox.Add(bridge);
+
+            Heart h3 = new Heart(new Point(2054, 300));
+            Heart h4 = new Heart(new Point(2154, 300));
+
+            items.Add(h3);
+            items.Add(h4);
+            this.Controls.Add(h3.GetItemPictureBox());
+            this.Controls.Add(h4.GetItemPictureBox());
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -178,7 +202,7 @@ namespace FP_Greenfall.LevelForm
 
         private void Render()
         {
-            if(player.GetPlayerPictureBox() != null)
+            if (player.GetPlayerPictureBox() != null)
             {
                 worldX = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetX;
                 worldY = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetY;
@@ -188,6 +212,12 @@ namespace FP_Greenfall.LevelForm
             player.Animation(ClientSize, listOfPictureBox, worldY); 
             player.UpdateHealthBar();
             player.CheckItemCollision(items);
+
+            if(player.collideWithStone)
+            {
+                InitializeBridge();
+                player.collideWithStone = false;
+            }
 
             foreach (var enemy in enemies)
             {

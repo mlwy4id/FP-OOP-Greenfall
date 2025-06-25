@@ -22,14 +22,14 @@ namespace FP_Greenfall.Resource {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Paper {
+    internal class Stone {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Paper() {
+        internal Stone() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace FP_Greenfall.Resource {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FP_Greenfall.Resource.Paper", typeof(Paper).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FP_Greenfall.Resource.Stone", typeof(Stone).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,9 @@ namespace FP_Greenfall.Resource {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Papers {
+        internal static byte[] Stones {
             get {
-                object obj = ResourceManager.GetObject("Papers", resourceCulture);
+                object obj = ResourceManager.GetObject("Stones", resourceCulture);
                 return ((byte[])(obj));
             }
         }

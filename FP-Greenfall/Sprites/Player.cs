@@ -3,6 +3,7 @@ using FP_Greenfall.Resource;
 using FP_Greenfall.Sprites.Enemy;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -33,6 +34,7 @@ namespace FP_Greenfall.Sprites
         private int step;
 
         private bool hasKey;
+        public bool collideWithStone = false;
 
         private System.Windows.Forms.Timer dashing;
         private System.Windows.Forms.Timer jumpCooldown;
@@ -275,13 +277,42 @@ namespace FP_Greenfall.Sprites
 
             for(int i = items.Count - 1; i >= 0; i--)
             {
-                var itembox = items[i].GetItemPictureBox();
+                var item = items[i];
+                var itembox = item.GetItemPictureBox();
 
-                if(itembox != null && itembox.Tag.ToString() == "HealingItem" && itembox.Bounds.IntersectsWith(characterPictureBox.Bounds))
+                if (item.isClaimed) continue;
+
+                if(itembox != null && itembox.Tag != null && itembox.Bounds.IntersectsWith(characterPictureBox.Bounds))
                 {
-                    AddHealth();
+                    string tag = itembox.Tag.ToString();
+
+                    switch (tag)
+                    {
+                        case "HealingItem":
+                            AddHealth();
+                            break;
+                        case "KeyItem":
+                            hasKey = true;
+                            break;
+                        case "Stone":
+                            if(hasKey)
+                            {
+                                collideWithStone = true;
+                            } else
+                            {
+                                continue;
+                            }
+                                break;
+                        default: continue;
+                    }
+
+                    if(itembox.Parent != null)
+                    {
+                        itembox.Parent.Controls.Remove(itembox);
+                    }
+
                     itembox.Dispose();
-                    items.RemoveAt(i);
+                    items.Remove(item);
                 }
             }
         }
@@ -291,7 +322,11 @@ namespace FP_Greenfall.Sprites
         {
             if (health < maxHealth)
             {
-                health += 1;
+                health += 3;
+                if(health > maxHealth)
+                {
+                    health -= health % maxHealth;
+                }
                 UpdateHealthBar();
             }
         }

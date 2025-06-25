@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FP_Greenfall.Resource;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace FP_Greenfall.items
 
         protected int itemsWidth;
         protected int itemsHeight;
+
+        public bool isClaimed = false;
 
         public PictureBox GetItemPictureBox() => itemsPictureBox;
     }
