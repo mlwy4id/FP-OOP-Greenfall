@@ -213,8 +213,7 @@ namespace FP_Greenfall.LevelForm
                 "←         → Move Left\n" +
                 "→         → Move Right\n" +
                 "Tab       → Dash\n" +
-                "W         → Attack\n" +
-                "Esc       → Pause / Exit";
+                "W         → Attack";
 
             MessageBox.Show(controls, "Controls", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
