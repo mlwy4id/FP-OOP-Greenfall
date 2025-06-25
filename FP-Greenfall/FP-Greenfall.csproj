@@ -45,6 +45,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Stone.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resource\Tree.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Tree.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +80,10 @@
     <EmbeddedResource Update="Resource\Stone.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Stone.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource\Tree.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Tree.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

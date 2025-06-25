@@ -35,6 +35,7 @@ namespace FP_Greenfall.Sprites
 
         private bool hasKey;
         public bool collideWithStone = false;
+        public bool collideWithTree = false;
 
         private System.Windows.Forms.Timer dashing;
         private System.Windows.Forms.Timer jumpCooldown;
@@ -280,8 +281,6 @@ namespace FP_Greenfall.Sprites
                 var item = items[i];
                 var itembox = item.GetItemPictureBox();
 
-                if (item.isClaimed) continue;
-
                 if(itembox != null && itembox.Tag != null && itembox.Bounds.IntersectsWith(characterPictureBox.Bounds))
                 {
                     string tag = itembox.Tag.ToString();
@@ -302,7 +301,10 @@ namespace FP_Greenfall.Sprites
                             {
                                 continue;
                             }
-                                break;
+                            break;
+                        case "Tree":
+                            collideWithTree = true;
+                            break;
                         default: continue;
                     }
 

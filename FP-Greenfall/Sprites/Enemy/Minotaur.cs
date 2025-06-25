@@ -28,7 +28,7 @@ namespace FP_Greenfall.Sprites.Enemy
             WalkFrame = 12;
             AttackFrame = 5;
 
-            AttackAnimationInterval = 90;
+            AttackAnimationInterval = 180;
             AttackCooldownInterval = 2000;
 
             totalFrame = WalkFrame;

@@ -42,6 +42,16 @@ namespace FP_Greenfall
                 BackColor = Color.Transparent
             };
 
+            levelButton = new Button
+            {
+                Size = new Size(125, 50),
+                Text = "Start",
+                BackColor = Color.White,
+                ForeColor = Color.Black
+            };
+            levelButton.Click += LevelButtonClicked;
+            panel.Controls.Add(levelButton);
+
             exitButton = new Button
             {
                 Size = new Size(125, 50),
@@ -55,6 +65,14 @@ namespace FP_Greenfall
             this.Controls.Add(panel);
         }
 
+        private void LevelButtonClicked(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            CrackedForest crackedForest = new CrackedForest();
+            crackedForest.FormClosed += (s, e) => this.Show();
+            crackedForest.Show();
+        }
         private void ExitButtonClicked(object sender, EventArgs e)
         {
             this.Close();

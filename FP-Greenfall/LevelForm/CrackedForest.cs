@@ -24,11 +24,14 @@ namespace FP_Greenfall.LevelForm
         private int worldX;
         private int worldY;
 
+        private bool stopMessageBox;
+
         private Camera camera;
         private System.Windows.Forms.Timer timer;
 
         public CrackedForest()
         {
+            ShowControlInfo();
             Initialize();
             InitializeGround();
             InitializePlayer();
@@ -143,11 +146,13 @@ namespace FP_Greenfall.LevelForm
             Heart h2 = new Heart(new Point(444, -381));
             Key k1 = new Key(new Point(1194, -382));
             Stone s1 = new Stone(new Point(1300, 464));
+            Tree t1 = new Tree(new Point(4444, 350));
 
             items.Add(h1);
             items.Add(h2);
             items.Add(k1);
             items.Add(s1);
+            items.Add(t1);
             foreach(Items item in items)
             {
                 this.Controls.Add(item.GetItemPictureBox());
@@ -200,15 +205,33 @@ namespace FP_Greenfall.LevelForm
             }
         }
 
+        private void ShowControlInfo()
+        {
+            string controls =
+                "🎮 Game Controls\n\n" +
+                "Space     → Jump\n" +
+                "←         → Move Left\n" +
+                "→         → Move Right\n" +
+                "Tab       → Dash\n" +
+                "W         → Attack\n" +
+                "Esc       → Pause / Exit";
+
+            MessageBox.Show(controls, "Controls", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void GameFinish()
+        {
+            MessageBox.Show(
+                "Congratulations!\n\nYou've completed the current version of the game.\n\nThank you for playing!\n\nStay tuned for upcoming updates and new adventures!",
+                "Game Completed!",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+
+            this.Close();
+        }
+
         private void Render()
         {
-            if (player.GetPlayerPictureBox() != null)
-            {
-                worldX = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetX;
-                worldY = player.GetPlayerPictureBox().Location.Y - camera.WorldOffsetY;
-                Debug.WriteLine($"x: {worldX}, y: {worldY}");
-            }
-
             player.Animation(ClientSize, listOfPictureBox, worldY); 
             player.UpdateHealthBar();
             player.CheckItemCollision(items);
@@ -217,6 +240,13 @@ namespace FP_Greenfall.LevelForm
             {
                 InitializeBridge();
                 player.collideWithStone = false;
+            }
+
+            if(!stopMessageBox && player.collideWithTree)
+            {
+                stopMessageBox = true;
+                timer?.Stop();
+                GameFinish();
             }
 
             foreach (var enemy in enemies)

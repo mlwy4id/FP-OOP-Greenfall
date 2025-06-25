@@ -15,8 +15,6 @@ namespace FP_Greenfall.items
         protected int itemsWidth;
         protected int itemsHeight;
 
-        public bool isClaimed = false;
-
         public PictureBox GetItemPictureBox() => itemsPictureBox;
     }
 }
